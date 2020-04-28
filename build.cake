@@ -27,16 +27,21 @@ Task("npm install")
     NpmInstall();
 });
 
-Task("Jasmine tests")
+Task("eslint")
     .IsDependentOn("npm install")
+    .Does(() => {
+    NpmRunScript(new NpmRunScriptSettings { ScriptName = "pretest" });
+});
+
+Task("Jasmine tests")
+    .IsDependentOn("eslint")
     .Does(() =>
 {
-    var testSettings = new NpmRunScriptSettings { ScriptName = "test" };
-    NpmRunScript(testSettings);
+    NpmRunScript(new NpmRunScriptSettings { ScriptName = "test" });
 });
 
 Task("Verify .env")
-    .IsDependentOn("npm install")
+    .IsDependentOn("Jasmine tests")
     .Does(() =>
 {
     if (!FileExists(envFile)) 
