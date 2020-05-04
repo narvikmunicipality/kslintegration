@@ -4,7 +4,7 @@ function VismaSyncWorker(log, sqlserver, vismaDataSource) {
     return {
         run: async () => {
             const request = sqlserver.request()
-            const persons = vismaDataSource.getPersons();
+            const persons = await vismaDataSource.getPersons();
 
             for (let person_i = 0; person_i < persons.length; person_i++) {
                 const person = persons[person_i]

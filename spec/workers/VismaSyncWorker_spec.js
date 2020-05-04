@@ -24,7 +24,7 @@ describe('VismaSyncWorker', () => {
     describe('units', () => {
         describe('single user with single unit', () => {
             it('calls input with correct parameter for organisation id', async () => {
-                vismaDataSourceMock.getPersons.and.returnValue([EMPLOYEE_WITH_SINGLE_POSITION])
+                vismaDataSourceMock.getPersons.and.returnValue(Promise.resolve([EMPLOYEE_WITH_SINGLE_POSITION]))
 
                 await worker.run()
 
@@ -32,7 +32,7 @@ describe('VismaSyncWorker', () => {
             })
 
             it('calls input with correct parameter for name', async () => {
-                vismaDataSourceMock.getPersons.and.returnValue([EMPLOYEE_WITH_SINGLE_POSITION])
+                vismaDataSourceMock.getPersons.and.returnValue(Promise.resolve([EMPLOYEE_WITH_SINGLE_POSITION]))
 
                 await worker.run()
 
@@ -40,7 +40,7 @@ describe('VismaSyncWorker', () => {
             })
 
             it('inserts found units in database with correct query', async () => {
-                vismaDataSourceMock.getPersons.and.returnValue([EMPLOYEE_WITH_SINGLE_POSITION])
+                vismaDataSourceMock.getPersons.and.returnValue(Promise.resolve([EMPLOYEE_WITH_SINGLE_POSITION]))
 
                 await worker.run()
 
@@ -50,7 +50,7 @@ describe('VismaSyncWorker', () => {
 
         describe('single user with multiple units', () => {
             it('calls input with correct parameter for organisation id', async () => {
-                vismaDataSourceMock.getPersons.and.returnValue([EMPLOYEE_WITH_TWO_POSITIONS])
+                vismaDataSourceMock.getPersons.and.returnValue(Promise.resolve([EMPLOYEE_WITH_TWO_POSITIONS]))
 
                 await worker.run()
 
@@ -59,7 +59,7 @@ describe('VismaSyncWorker', () => {
             })
 
             it('calls input with correct parameter for name', async () => {
-                vismaDataSourceMock.getPersons.and.returnValue([EMPLOYEE_WITH_TWO_POSITIONS])
+                vismaDataSourceMock.getPersons.and.returnValue(Promise.resolve([EMPLOYEE_WITH_TWO_POSITIONS]))
 
                 await worker.run()
 
@@ -68,7 +68,7 @@ describe('VismaSyncWorker', () => {
             })
 
             it('inserts found units in database with correct query', async () => {
-                vismaDataSourceMock.getPersons.and.returnValue([EMPLOYEE_WITH_TWO_POSITIONS])
+                vismaDataSourceMock.getPersons.and.returnValue(Promise.resolve([EMPLOYEE_WITH_TWO_POSITIONS]))
 
                 await worker.run()
 
