@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<personsXML xsi:noNamespaceSchemaLocation="http://localhost/hrm_ws/schemas/person/enterprisePersonsExport.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <person personIdHRM="1">
+        <employments>
+            <employment>
+                <employeeId>11</employeeId>
+                <positions>
+                    <position isPrimaryPosition="true">
+                        <chart id="101" name="Kommune">
+                            <unit id="1001" name="Enhetsnavn 1"></unit>
+                        </chart>
+                        <positionStartDate>2020-02-01</positionStartDate>
+                        <positionInfo>
+                            <positionCode name="Konsulent"/>
+                        </positionInfo>
+                    </position>
+                    <position isPrimaryPosition="false">
+                        <chart id="101" name="Kommune">
+                            <unit id="1002" name="Enhetsnavn 2"></unit>
+                        </chart>
+                        <positionStartDate>2020-03-01</positionStartDate>
+                        <positionInfo>
+                            <positionCode name="Ingeniør"/>
+                        </positionInfo>
+                    </position>
+                </positions>
+            </employment>
+        </employments>
+        <familyName>Nordmann</familyName>
+        <givenName>Ola</givenName>
+        <ssn>01020304050</ssn>
+    </person>
+    <person personIdHRM="2">
+        <employments>
+            <employment>
+                <employeeId>12</employeeId>
+                <positions>
+                    <position isPrimaryPosition="true">
+                        <chart id="101" name="Kommune">
+                            <unit id="1003" name="Enhetsnavn 3"></unit>
+                        </chart>
+                        <positionStartDate>2020-01-01</positionStartDate>
+                        <positionInfo>
+                            <positionCode name="Leder"/>
+                        </positionInfo>
+                    </position>
+                    <position isPrimaryPosition="false">
+                        <chart id="101" name="Kommune">
+                            <unit id="1004" name="Enhetsnavn 4"></unit>
+                        </chart>
+                        <positionStartDate>2020-04-01</positionStartDate>
+                        <positionEndDate>2020-04-02</positionEndDate>
+                        <positionInfo>
+                            <positionCode name="Lærer"/>
+                        </positionInfo>
+                    </position>
+                </positions>
+            </employment>
+        </employments>
+        <familyName>Sørmann</familyName>
+        <givenName>Kari</givenName>
+        <ssn>05040302010</ssn>
+    </person>
+</personsXML>

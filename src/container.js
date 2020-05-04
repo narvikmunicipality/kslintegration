@@ -12,6 +12,16 @@ async function Container() {
         appenders: { 'out': { type: 'stdout' } },
         categories: { default: { appenders: ['out'], level: 'debug' } }
     });
+    var log = log4js.getLogger('bottlejs');
+    
+    // Setup database connection pool.
+    log.debug(`Connecting to database "${config.database.config.database}" as "${config.database.config.user}" on "${config.database.config.server}" ...`);
+    if (config.database.config.password === undefined) {
+        log.warn(`Password for database user "${config.database.config.user}" is "${config.database.config.password}"`);
+    }
+    let mssql = require('mssql');
+    let sqlPool = await mssql.connect(config.database.config);
+    log.debug('Connection to database established.');
     
     // Import types.
     let AuthorityController = require('./controllers/AuthorityController')
@@ -32,9 +42,13 @@ async function Container() {
     bottle.constant('config', config);
     bottle.constant('express', require('express'));
     bottle.constant('rawhttpclient', axios.create({ 'maxContentLength': Infinity, 'maxBodyLength': Infinity }))
-    bottle.constant('xml', require('xml-js'))
+    bottle.constant('xml', xml => require('xml-js').xml2js(xml, { compact: true }))
+    bottle.constant('readfile', require('util').promisify(require('fs').readFile))
+    
+    bottle.constant('sqlserver', sqlPool);
     bottle.constant('ldap', require('ldapjs-no-python'));
     bottle.constant('basicauth', require('express-basic-auth'))
+
 
     // Miscellaneous
     bottle.factory('indexRoutes', c => indexRoutes(c));    

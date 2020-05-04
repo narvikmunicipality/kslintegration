@@ -6,19 +6,19 @@
         {
             "label": "eslint",
             "type": "npm",
-            "script": "pretest",
-            "group": "build"
+            "script": "posttest",
+            "dependsOrder": "sequence",
+            "dependsOn": ["tests"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }            
         },
         {
             "label": "tests",
             "type": "npm",
             "script": "test",
-            "dependsOrder": "sequence",
-            "dependsOn": ["eslint"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         }
     ]
 }
