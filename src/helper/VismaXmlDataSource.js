@@ -9,7 +9,10 @@ function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
                 const xmlPerson = personList[person_i];
                 
                 persons.push({
-                    employeeId: xmlPerson.employments.employment.employeeId._text
+                    employeeId: xmlPerson.employments.employment.employeeId._text,
+                    familyName: xmlPerson.familyName._text,
+                    givenName: xmlPerson.givenName._text,
+                    ssn: xmlPerson.ssn._text,
                 })
             }
 
