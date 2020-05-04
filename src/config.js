@@ -24,4 +24,7 @@ module.exports = {
             }
         }
     },
+    visma: {
+        xmlpath: process.env.VISMA_XML_FILE_PATH,
+    }
 };

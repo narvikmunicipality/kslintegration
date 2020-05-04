@@ -1,12 +1,12 @@
-function VismaSyncWorker(log, sqlserver, vismaDataSource) {
-    log.debug('VismaSyncWorker created.')
+function VismaOrganisationSyncWorker(log, sqlserver, vismaDataSource) {
+    log.debug('VismaOrganisationSyncWorker created.')
 
     return {
         run: async () => {
-            const request = sqlserver.request()
             const persons = await vismaDataSource.getPersons();
-
+            
             for (let person_i = 0; person_i < persons.length; person_i++) {
+                const request = sqlserver.request()
                 const person = persons[person_i]
                 for (let position_i = 0; position_i < person.positions.length; position_i++) {
                     const position = person.positions[position_i];
@@ -21,4 +21,4 @@ function VismaSyncWorker(log, sqlserver, vismaDataSource) {
     }
 }
 
-module.exports = VismaSyncWorker
+module.exports = VismaOrganisationSyncWorker

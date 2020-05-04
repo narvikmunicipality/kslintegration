@@ -1,27 +1,38 @@
 function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
+    function isExpired(position) {
+        return position.positionEndDate && new Date(position.positionEndDate._text) <= new Date()
+    }
+
+    function isMissingChart(position) {
+        return position.chart === undefined
+    }
+
     return {
         getPersons: async () => {
             let xml = await parseXml(await fileReader(vismaXmlPath))
-            let personList = xml.personsXML.person
+            let personList = Array.isArray(xml.personsXML.person) ? xml.personsXML.person : [xml.personsXML.person]
             let persons = []
 
             for (let person_i = 0; person_i < personList.length; person_i++) {
                 const xmlPerson = personList[person_i];
+                const xmlPositions = xmlPerson.employments.employment.positions
 
                 let positions = []
-                for (let position_i = 0; position_i < xmlPerson.employments.employment.positions.position.length; position_i++) {
-                    const position = xmlPerson.employments.employment.positions.position[position_i];
+                let xmlPosition = Object.keys(xmlPositions).length === 0 ? [] : (Array.isArray(xmlPositions.position) ? xmlPositions.position : [xmlPositions.position])
+                for (let position_i = 0; position_i < xmlPosition.length; position_i++) {
+                    const position = xmlPosition[position_i];
 
-                    if (position.positionEndDate && new Date(position.positionEndDate._text) <= new Date()) {
+                    if (isExpired(position) || isMissingChart(position)) {
                         continue
                     }
-                    
+
+                    let positionCode = position.positionInfo.positionCode
+
                     positions.push({
                         organisationId: position.chart._attributes.id,
                         unitId: position.chart.unit._attributes.id,
-                        name: position.positionInfo.positionCode._attributes.name,
+                        name: positionCode === undefined ? '' : positionCode._attributes.name,
                         startDate: new Date(position.positionStartDate._text),
-                        endDate: position.positionEndDate && new Date(position.positionEndDate._text),
                         isPrimary: position._attributes.isPrimaryPosition == 'true',
                     })
                 }

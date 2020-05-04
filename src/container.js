@@ -10,7 +10,7 @@ async function Container() {
     let log4js = require('log4js');
     log4js.configure({
         appenders: { 'out': { type: 'stdout' } },
-        categories: { default: { appenders: ['out'], level: 'debug' } }
+        categories: { default: { appenders: ['out'], level: 'trace' } }
     });
     var log = log4js.getLogger('bottlejs');
     
@@ -29,7 +29,9 @@ async function Container() {
     let EmployeeTaxonomyController = require('./controllers/EmployeeTaxonomyController')
     let OrganisationController = require('./controllers/OrganisationController')
     let PersonController = require('./controllers/PersonController')
-    let VenueController = require('./controllers/VenueController')    
+    let VenueController = require('./controllers/VenueController')  
+    let VismaXmlDataSource = require('./helper/VismaXmlDataSource')
+    let VismaOrganisationSyncWorker = require('./workers/VismaOrganisationSyncWorker')
     let EmployeePositionService = require('./services/EmployeePositionService')
     let OrganisationService = require('./services/OrganisationService')
     let PersonService = require('./services/PersonService')
@@ -49,9 +51,13 @@ async function Container() {
     bottle.constant('ldap', require('ldapjs-no-python'));
     bottle.constant('basicauth', require('express-basic-auth'))
 
-
     // Miscellaneous
-    bottle.factory('indexRoutes', c => indexRoutes(c));    
+    bottle.factory('indexRoutes', c => indexRoutes(c));
+
+    // Workers
+    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.config.visma.xmlpath, c.readfile, c.xml))
+    bottle.factory('vismaorganisationsyncworker', c => new VismaOrganisationSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource))
+    bottle.factory('workers', c => [c.vismaorganisationsyncworker])
 
     // Services
     bottle.factory('EmployeePositionService', c => new EmployeePositionService(c.logger('EmployeePositionService')));

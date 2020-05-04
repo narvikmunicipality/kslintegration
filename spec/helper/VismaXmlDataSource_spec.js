@@ -6,126 +6,151 @@ describe('VismaXmlDataSource', () => {
     var source
 
     beforeEach(() => {
-        source = new VismaXmlDataSource('spec/testdata/visma.xml', fsfread, xml2js)
         jasmine.clock().install()
         jasmine.clock().mockDate(new Date('2020-04-30'))
     })
-    
+
     afterEach(() => {
         jasmine.clock().uninstall()
     })
 
-    for (const { testName, personsIndex, employeeId } of [
-        { testName: 'First person has correct employeeId', personsIndex: 0, employeeId: '11' },
-        { testName: 'Second person has correct employeeId', personsIndex: 1, employeeId: '12' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].employeeId).toEqual(employeeId)
+    describe('persons with every field', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma.xml', fsfread, xml2js)
         })
-    }
 
-    for (const { testName, personsIndex, familyName } of [
-        { testName: 'First person has correct familyName', personsIndex: 0, familyName: 'Nordmann' },
-        { testName: 'Second person has correct familyName', personsIndex: 1, familyName: 'Sørmann' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].familyName).toEqual(familyName)
-        })
-    }
+        for (const { testName, personsIndex, employeeId } of [
+            { testName: 'First person has correct employeeId', personsIndex: 0, employeeId: '11' },
+            { testName: 'Second person has correct employeeId', personsIndex: 1, employeeId: '12' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].employeeId).toEqual(employeeId)
+            })
+        }
 
-    for (const { testName, personsIndex, givenName: givenName } of [
-        { testName: 'First person has correct givenName', personsIndex: 0, givenName: 'Ola' },
-        { testName: 'Second person has correct givenName', personsIndex: 1, givenName: 'Kari' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].givenName).toEqual(givenName)
-        })
-    }
+        for (const { testName, personsIndex, familyName } of [
+            { testName: 'First person has correct familyName', personsIndex: 0, familyName: 'Nordmann' },
+            { testName: 'Second person has correct familyName', personsIndex: 1, familyName: 'Sørmann' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].familyName).toEqual(familyName)
+            })
+        }
 
-    for (const { testName, personsIndex, ssn: ssn } of [
-        { testName: 'First person has correct ssn', personsIndex: 0, ssn: '01020304050' },
-        { testName: 'Second person has correct ssn', personsIndex: 1, ssn: '05040302010' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].ssn).toEqual(ssn)
-        })
-    }    
+        for (const { testName, personsIndex, givenName: givenName } of [
+            { testName: 'First person has correct givenName', personsIndex: 0, givenName: 'Ola' },
+            { testName: 'Second person has correct givenName', personsIndex: 1, givenName: 'Kari' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].givenName).toEqual(givenName)
+            })
+        }
 
-    for (const { testName, personsIndex, internalId: internalId } of [
-        { testName: 'First person has correct internal HRM ID', personsIndex: 0, internalId: '1' },
-        { testName: 'Second person has correct internal HRM ID', personsIndex: 1, internalId: '2' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].internalId).toEqual(internalId)
-        })
-    }        
+        for (const { testName, personsIndex, ssn: ssn } of [
+            { testName: 'First person has correct ssn', personsIndex: 0, ssn: '01020304050' },
+            { testName: 'Second person has correct ssn', personsIndex: 1, ssn: '05040302010' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].ssn).toEqual(ssn)
+            })
+        }
 
-    for (const { testName, personsIndex, positions: positions } of [
-        { testName: 'First persons active positions is not filtered', personsIndex: 0, positions: 2 },
-        { testName: 'Second persons inactive position is filtered', personsIndex: 1, positions: 1 }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions.length).toEqual(positions)
-        })
-    }
+        for (const { testName, personsIndex, internalId: internalId } of [
+            { testName: 'First person has correct internal HRM ID', personsIndex: 0, internalId: '1' },
+            { testName: 'Second person has correct internal HRM ID', personsIndex: 1, internalId: '2' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].internalId).toEqual(internalId)
+            })
+        }
 
-    for (const { testName, personsIndex, positionIndex, isPrimary: isPrimary } of [
-        { testName: 'First persons first position is primary', personsIndex: 0, positionIndex: 0, isPrimary: true },
-        { testName: 'First persons second position is not primary', personsIndex: 0, positionIndex: 1, isPrimary: false },
-        { testName: 'Second persons position is primary', personsIndex: 1, positionIndex: 0, isPrimary: true }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions[positionIndex].isPrimary).toBe(isPrimary)
-        })
-    }    
+        for (const { testName, personsIndex, positions: positions } of [
+            { testName: 'First persons active positions is not filtered', personsIndex: 0, positions: 2 },
+            { testName: 'Second persons inactive position is filtered', personsIndex: 1, positions: 1 }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions.length).toEqual(positions)
+            })
+        }
 
-    for (const { testName, personsIndex, positionIndex, organisationId: organisationId } of [
-        { testName: 'First persons first position has correct organisationId', personsIndex: 0, positionIndex: 0, organisationId: '101' },
-        { testName: 'First persons second position has correct organisationId', personsIndex: 0, positionIndex: 1, organisationId: '101' },
-        { testName: 'Second persons position has correct organisationId', personsIndex: 1, positionIndex: 0, organisationId: '101' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions[positionIndex].organisationId).toEqual(organisationId)
-        })
-    }    
-    
-    for (const { testName, personsIndex, positionIndex, unitId: unitId } of [
-        { testName: 'First persons first position has correct unitId', personsIndex: 0, positionIndex: 0, unitId: '1001' },
-        { testName: 'First persons second position has correct unitId', personsIndex: 0, positionIndex: 1, unitId: '1002' },
-        { testName: 'Second persons position has correct unitId', personsIndex: 1, positionIndex: 0, unitId: '1003' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions[positionIndex].unitId).toEqual(unitId)
-        })
-    }    
-        
-    for (const { testName, personsIndex, positionIndex, name: name } of [
-        { testName: 'First persons first position has correct name', personsIndex: 0, positionIndex: 0, name: 'Konsulent' },
-        { testName: 'First persons second position has correct name', personsIndex: 0, positionIndex: 1, name: 'Ingeniør' },
-        { testName: 'Second persons position has correct name', personsIndex: 1, positionIndex: 0, name: 'Leder' }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions[positionIndex].name).toEqual(name)
-        })
-    }    
-        
-    for (const { testName, personsIndex, positionIndex, startDate: startDate } of [
-        { testName: 'First persons first position has correct startDate', personsIndex: 0, positionIndex: 0, startDate: new Date('2020-02-01') },
-        { testName: 'First persons second position has correct startDate', personsIndex: 0, positionIndex: 1, startDate: new Date('2020-03-01') },
-        { testName: 'Second persons position has correct startDate', personsIndex: 1, positionIndex: 0, startDate: new Date('2020-01-01') }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions[positionIndex].startDate).toEqual(startDate)
-        })
-    }    
+        for (const { testName, personsIndex, positionIndex, isPrimary: isPrimary } of [
+            { testName: 'First persons first position is primary', personsIndex: 0, positionIndex: 0, isPrimary: true },
+            { testName: 'First persons second position is not primary', personsIndex: 0, positionIndex: 1, isPrimary: false },
+            { testName: 'Second persons position is primary', personsIndex: 1, positionIndex: 0, isPrimary: true }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].isPrimary).toBe(isPrimary)
+            })
+        }
 
-    for (const { testName, personsIndex, positionIndex, endDate: endDate } of [
-        { testName: 'First persons first position has correct endDate', personsIndex: 0, positionIndex: 0, endDate: undefined },
-        { testName: 'First persons second position has correct endDate', personsIndex: 0, positionIndex: 1, endDate: new Date('2020-05-01') },
-        { testName: 'Second persons position has correct endDate', personsIndex: 1, positionIndex: 0, endDate: undefined }
-    ]) {
-        it(testName, async () => {
-            expect((await source.getPersons())[personsIndex].positions[positionIndex].endDate).toEqual(endDate)
+        for (const { testName, personsIndex, positionIndex, organisationId: organisationId } of [
+            { testName: 'First persons first position has correct organisationId', personsIndex: 0, positionIndex: 0, organisationId: '101' },
+            { testName: 'First persons second position has correct organisationId', personsIndex: 0, positionIndex: 1, organisationId: '101' },
+            { testName: 'Second persons position has correct organisationId', personsIndex: 1, positionIndex: 0, organisationId: '101' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].organisationId).toEqual(organisationId)
+            })
+        }
+
+        for (const { testName, personsIndex, positionIndex, unitId: unitId } of [
+            { testName: 'First persons first position has correct unitId', personsIndex: 0, positionIndex: 0, unitId: '1001' },
+            { testName: 'First persons second position has correct unitId', personsIndex: 0, positionIndex: 1, unitId: '1002' },
+            { testName: 'Second persons position has correct unitId', personsIndex: 1, positionIndex: 0, unitId: '1003' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].unitId).toEqual(unitId)
+            })
+        }
+
+        for (const { testName, personsIndex, positionIndex, name: name } of [
+            { testName: 'First persons first position has correct name', personsIndex: 0, positionIndex: 0, name: 'Konsulent' },
+            { testName: 'First persons second position has correct name', personsIndex: 0, positionIndex: 1, name: 'Ingeniør' },
+            { testName: 'Second persons position has correct name', personsIndex: 1, positionIndex: 0, name: 'Leder' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].name).toEqual(name)
+            })
+        }
+
+        for (const { testName, personsIndex, positionIndex, startDate: startDate } of [
+            { testName: 'First persons first position has correct startDate', personsIndex: 0, positionIndex: 0, startDate: new Date('2020-02-01') },
+            { testName: 'First persons second position has correct startDate', personsIndex: 0, positionIndex: 1, startDate: new Date('2020-03-01') },
+            { testName: 'Second persons position has correct startDate', personsIndex: 1, positionIndex: 0, startDate: new Date('2020-01-01') }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].startDate).toEqual(startDate)
+            })
+        }
+    })
+
+    describe('person with no positions', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_positions.xml', fsfread, xml2js)
         })
-    }
+
+        it('positions is empty array', async () => {
+            expect((await source.getPersons())[0].positions.length).toEqual(0)
+        })
+    })
+
+    describe('person with no positionCode', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_positioncode.xml', fsfread, xml2js)
+        })
+
+        it('position name is empty string', async () => {
+            expect((await source.getPersons())[0].positions[0].name).toEqual('')
+        })
+    })
+
+    describe('person with no chart', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_chart.xml', fsfread, xml2js)
+        })
+
+        it('positions is empty array', async () => {
+            expect((await source.getPersons())[0].positions.length).toEqual(0)
+        })
+    })
 })

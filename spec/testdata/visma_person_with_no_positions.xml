@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<personsXML xsi:noNamespaceSchemaLocation="http://localhost/hrm_ws/schemas/person/enterprisePersonsExport.xsd"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <person personIdHRM="1">
+        <employments>
+            <employment>
+                <employeeId>11</employeeId>
+                <positions/>
+            </employment>
+        </employments>
+        <familyName>Nordmann</familyName>
+        <givenName>Ola</givenName>
+        <ssn>01020304050</ssn>
+    </person>
+</personsXML>
