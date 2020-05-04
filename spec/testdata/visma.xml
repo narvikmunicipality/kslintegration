@@ -7,7 +7,7 @@
                 <employeeId>11</employeeId>
                 <positions>
                     <position isPrimaryPosition="true">
-                        <chart id="101" name="Kommune">
+                        <chart id="101">
                             <unit id="1001" name="Enhetsnavn 1"></unit>
                         </chart>
                         <positionStartDate>2020-02-01</positionStartDate>
@@ -16,10 +16,11 @@
                         </positionInfo>
                     </position>
                     <position isPrimaryPosition="false">
-                        <chart id="101" name="Kommune">
+                        <chart id="101">
                             <unit id="1002" name="Enhetsnavn 2"></unit>
                         </chart>
                         <positionStartDate>2020-03-01</positionStartDate>
+                        <positionEndDate>2020-05-01</positionEndDate>                        
                         <positionInfo>
                             <positionCode name="Ingeniør"/>
                         </positionInfo>
@@ -37,7 +38,7 @@
                 <employeeId>12</employeeId>
                 <positions>
                     <position isPrimaryPosition="true">
-                        <chart id="101" name="Kommune">
+                        <chart id="101">
                             <unit id="1003" name="Enhetsnavn 3"></unit>
                         </chart>
                         <positionStartDate>2020-01-01</positionStartDate>
@@ -46,7 +47,7 @@
                         </positionInfo>
                     </position>
                     <position isPrimaryPosition="false">
-                        <chart id="101" name="Kommune">
+                        <chart id="101">
                             <unit id="1004" name="Enhetsnavn 4"></unit>
                         </chart>
                         <positionStartDate>2020-04-01</positionStartDate>
