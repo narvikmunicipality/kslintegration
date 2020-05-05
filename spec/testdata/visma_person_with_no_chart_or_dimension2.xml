@@ -8,9 +8,7 @@
                 <positions>
                     <position isPrimaryPosition="true">
                         <positionStartDate>2020-02-01</positionStartDate>
-                        <costCentres>
-                            <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
-                        </costCentres>
+                        <costCentres/>
                         <positionInfo>
                             <positionCode name="Konsulent"/>
                         </positionInfo>

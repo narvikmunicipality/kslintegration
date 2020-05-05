@@ -7,6 +7,14 @@ function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
         return position.chart === undefined
     }
 
+    function isMissingDimension2(position) {
+        return position.costCentres === undefined || position.costCentres.dimension2 === undefined
+    }
+
+    function capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     return {
         getPersons: async () => {
             let xml = await parseXml(await fileReader(vismaXmlPath))
@@ -22,7 +30,7 @@ function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
                 for (let position_i = 0; position_i < xmlPosition.length; position_i++) {
                     const position = xmlPosition[position_i];
 
-                    if (isExpired(position) || isMissingChart(position)) {
+                    if (isExpired(position) || isMissingChart(position) || isMissingDimension2(position)) {
                         continue
                     }
 
@@ -30,7 +38,8 @@ function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
 
                     positions.push({
                         organisationId: position.chart._attributes.id,
-                        unitId: position.chart.unit._attributes.id,
+                        unitId: position.costCentres.dimension2._attributes.value.replace(/^0*/g, ''),
+                        unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
                         name: positionCode === undefined ? '' : positionCode._attributes.name,
                         startDate: new Date(position.positionStartDate._text),
                         isPrimary: position._attributes.isPrimaryPosition == 'true',

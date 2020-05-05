@@ -7,9 +7,10 @@
                 <employeeId>11</employeeId>
                 <positions>
                     <position isPrimaryPosition="true">
-                        <chart id="101">
-                            <unit id="1001" name="Enhetsnavn 1"></unit>
-                        </chart>
+                        <chart id="101"/>
+                        <costCentres>
+                            <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
+                        </costCentres>
                         <positionStartDate>2020-02-01</positionStartDate>
                         <positionInfo>
                             <positionType name="Fyll fordi den skal ikke være tom" value="F"/>

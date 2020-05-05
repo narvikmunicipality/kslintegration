@@ -6,11 +6,10 @@
     
     for (let i = 0; i < c.workers.length; i++) {
         const worker = c.workers[i];
-        const workerLog = c.logger(worker.name)
 
-        workerLog.info('Starting')
+        log.info(`Starting ${worker.name}`)
         await worker.run()
-        workerLog.info('Done')
+        log.info(`Finished ${worker.name}`)
     }
 
     log.debug('Main worker finished.')

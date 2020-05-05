@@ -122,6 +122,17 @@ describe('VismaXmlDataSource', () => {
                 expect((await source.getPersons())[personsIndex].positions[positionIndex].startDate).toEqual(startDate)
             })
         }
+
+
+        for (const { testName, personsIndex, positionIndex, unitName: unitName } of [
+            { testName: 'First persons first position has correct unitName', personsIndex: 0, positionIndex: 0, unitName: 'Enhetsnavn 1' },
+            { testName: 'First persons second position has correct unitName', personsIndex: 0, positionIndex: 1, unitName: 'Enhetsnavn 2' },
+            { testName: 'Second persons position has correct unitName', personsIndex: 1, positionIndex: 0, unitName: 'Enhetsnavn 3' }
+        ]) {
+            it(testName, async () => {
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].unitName).toEqual(unitName)
+            })
+        }        
     })
 
     describe('person with no positions', () => {
@@ -147,6 +158,26 @@ describe('VismaXmlDataSource', () => {
     describe('person with no chart', () => {
         beforeEach(() => {
             source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_chart.xml', fsfread, xml2js)
+        })
+
+        it('positions is empty array', async () => {
+            expect((await source.getPersons())[0].positions.length).toEqual(0)
+        })
+    })
+
+    describe('person with no chart or dimension2', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_chart_or_dimension2.xml', fsfread, xml2js)
+        })
+
+        it('positions is empty array', async () => {
+            expect((await source.getPersons())[0].positions.length).toEqual(0)
+        })
+    })    
+    
+    describe('person with no dimension2', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_dimension2.xml', fsfread, xml2js)
         })
 
         it('positions is empty array', async () => {
