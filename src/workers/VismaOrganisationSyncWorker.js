@@ -13,16 +13,30 @@ function VismaOrganisationSyncWorker(log, sqlserver, vismaDataSource) {
                     const organisationId = position.organisationId + '-' + position.unitId;
 
                     const lookupResult = await sqlserver.request()
-                        .input('name', position.unitName)
                         .input('organisationId', organisationId)
-                        .query('SELECT COUNT(InternalId) AS Units FROM Organisation WHERE ToDate IS NULL AND NewVersionId IS NULL AND OrganisationId=@OrganisationId AND Name=@name')
+                        .query('SELECT InternalId,Name FROM Organisation WHERE ToDate IS NULL AND NewVersionId IS NULL AND OrganisationId=@OrganisationId')
 
-                    if (lookupResult.recordset[0].Units === 0) {
+
+                    //TODO: transactions
+                    if (lookupResult.recordset.length === 0) {
                         const insertRequest = sqlserver.request()
-                        await insertRequest.
-                            input('organisationId', organisationId).
-                            input('name', position.unitName).
-                            query('INSERT INTO Organisation (OrganisationId,Name) VALUES (@organisationId,@name)')
+                        await insertRequest
+                            .input('organisationId', organisationId)
+                            .input('name', position.unitName)
+                            .query('INSERT INTO Organisation (OrganisationId,Name) VALUES (@organisationId,@name)')
+                    } else if (lookupResult.recordset[0].Name !== position.unitName) {
+                        const insertRequest = sqlserver.request()
+                        let insertId = await insertRequest
+                            .input('organisationId', organisationId)
+                            .input('name', position.unitName)
+                            .query('INSERT INTO Organisation (OrganisationId,Name) VALUES (@organisationId,@name);SELECT SCOPE_IDENTITY() AS InsertId')
+
+                        const updateRequest = sqlserver.request()
+                        await updateRequest
+                            .input('name', position.unitName)
+                            .input('newInternalId', insertId.recordset[0].InsertId.toString())
+                            .input('oldInternalId', lookupResult.recordset[0].InternalId.toString())
+                            .query('UPDATE Organisation SET ToDate=GETDATE(),NewVersionId=@newInternalId WHERE InternalId=@oldInternalId')
                     }
                 }
             }
