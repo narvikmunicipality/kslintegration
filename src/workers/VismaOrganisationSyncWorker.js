@@ -38,6 +38,40 @@ function VismaOrganisationSyncWorker(log, sqlserver, vismaDataSource) {
             .query('UPDATE Organisation SET ToDate=GETDATE(),NewVersionId=@newInternalId WHERE InternalId=@oldInternalId')
     }
 
+    async function retrieveExistingItemsFromDatabase(sqlserver) {
+        let existingResult = await sqlserver.request()
+            .query('SELECT InternalId,OrganisationId FROM Organisation WHERE ToDate IS NULL AND NewVersionId IS NULL')
+        let idsInDatabase = []
+        for (let existing_i = 0; existing_i < existingResult.recordset.length; existing_i++) {
+            const item = existingResult.recordset[existing_i]
+            idsInDatabase.push({ InternalId: item.InternalId, OrganisationId: item.OrganisationId })
+        }
+        return idsInDatabase
+    }
+
+    function filterDatabaseItemsMissingFromSync(idsInDatabase, activeIds) {
+        let expiredIds = []
+        for (let database_i = 0; database_i < idsInDatabase.length; database_i++) {
+            const item = idsInDatabase[database_i]
+            if (!activeIds.includes(item.OrganisationId)) {
+                expiredIds.push(item.InternalId)
+            }
+        }
+        return expiredIds
+    }    
+
+    async function expireItemsInDatabase(activeIds, sqlserver) {
+        let idsInDatabase = await retrieveExistingItemsFromDatabase(sqlserver)
+        let expiredIds = filterDatabaseItemsMissingFromSync(idsInDatabase, activeIds)
+    
+        for (let expired_i = 0; expired_i < expiredIds.length; expired_i++) {
+            const expiredId = expiredIds[expired_i]
+            await sqlserver.request()
+                .input('internalId', expiredId)
+                .query('UPDATE Organisation SET ToDate=GETDATE() WHERE InternalId=@internalId')
+        }
+    }
+
     return {
         name: 'VismaOrganisationSyncWorker',
         run: async () => {
@@ -63,29 +97,7 @@ function VismaOrganisationSyncWorker(log, sqlserver, vismaDataSource) {
                 }
             }
 
-            let existingResult = await sqlserver.request()
-                .query('SELECT InternalId,OrganisationId FROM Organisation WHERE ToDate IS NULL AND NewVersionId IS NULL')
-            
-            let idsInDatabase = []
-            for (let existing_i = 0; existing_i < existingResult.recordset.length; existing_i++) {
-                const item = existingResult.recordset[existing_i];
-                idsInDatabase.push({ InternalId: item.InternalId, OrganisationId: item.OrganisationId})
-            }
-
-            let expiredIds = []
-            for (let database_i = 0; database_i < idsInDatabase.length; database_i++) {
-                const item = idsInDatabase[database_i];
-                if (!activeIds.includes(item.OrganisationId)) {
-                    expiredIds.push(item.InternalId)
-                }
-            }
-
-            for (let expired_i = 0; expired_i < expiredIds.length; expired_i++) {
-                const expiredId = expiredIds[expired_i]
-                await sqlserver.request()
-                        .input('internalId', expiredId)
-                        .query('UPDATE Organisation SET ToDate=GETDATE() WHERE InternalId=@internalId')
-            }
+            await expireItemsInDatabase(activeIds, sqlserver)
         }
     }
 }
