@@ -31,7 +31,7 @@ async function Container() {
     let PersonController = require('./controllers/PersonController')
     let VenueController = require('./controllers/VenueController')  
     let VismaXmlDataSource = require('./helper/VismaXmlDataSource')
-    let VismaOrganisationSyncWorker = require('./workers/VismaOrganisationSyncWorker')
+    let VismaOrganisationSyncWorker = require('./workers/VismaDatabaseSyncWorker')
     let EmployeePositionService = require('./services/EmployeePositionService')
     let OrganisationService = require('./services/OrganisationService')
     let PersonService = require('./services/PersonService')
