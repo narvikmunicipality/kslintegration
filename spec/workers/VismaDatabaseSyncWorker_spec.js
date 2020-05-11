@@ -15,9 +15,9 @@ describe('VismaDatabaseSyncWorker', () => {
     const ONE_MATCHING_EXISTING_PERSON_SQL_RESULT_P2 = { recordset: [{ InternalId: 1, JobTitle: 'Ingeniør', PrimaryPosition: 'false' }], output: {}, rowsAffected: [1] }
     const TWO_POSITIONS_IN_DATABASE_SQL_RESULT = { recordset: [{ InternalId: 1, OrganisationId: '101-1001', SocialSecurityNumber: '01020304050' }, { InternalId: 2, OrganisationId: '102-1002', SocialSecurityNumber: '01020304050' }], output: {}, rowsAffected: [2] }
 
-    const EMPLOYEE_WITH_SINGLE_POSITION_UNIT_1 = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', title: 'Konsulent' }] }
-    const EMPLOYEE_WITH_SINGLE_POSITION_UNIT_2 = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', title: 'Konsulent' }] }
-    const EMPLOYEE_WITH_TWO_POSITIONS = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', title: 'Konsulent' }, { isPrimaryPosition: false, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', title: 'Ingeniør' }] }
+    const EMPLOYEE_WITH_SINGLE_POSITION_UNIT_1 = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', name: 'Konsulent' }] }
+    const EMPLOYEE_WITH_SINGLE_POSITION_UNIT_2 = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', name: 'Konsulent' }] }
+    const EMPLOYEE_WITH_TWO_POSITIONS = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', name: 'Konsulent' }, { isPrimaryPosition: false, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', name: 'Ingeniør' }] }
 
     const EMPTY_PERSONS_LIST = Promise.resolve([])
     const FILLER_EMPTY_SQL_RESULT = { recordset: [], output: {}, rowsAffected: [0] }
@@ -293,7 +293,7 @@ describe('VismaDatabaseSyncWorker', () => {
                         return {
                             OrganisationId: person.positions[position_i].organisationId + '-' + person.positions[position_i].unitId,
                             SocialSecurityNumber: person.ssn,
-                            JobTitle: person.positions[position_i].title,
+                            JobTitle: person.positions[position_i].name,
                             PrimaryPosition: person.positions[position_i].isPrimaryPosition,
                         }
                     }

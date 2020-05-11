@@ -38,7 +38,13 @@ function RequestHelper(requests) {
 }
 
 function ParameterHelper(requests, query) {
+    let shouldHaveRun = true
+
     return {
+        get not() {
+            shouldHaveRun = false
+            return this
+        },
         withParameter: (...parameter) => {
             let matchingParameters = []
             for (let request_i = 0; request_i < requests.length; request_i++) {
@@ -54,11 +60,13 @@ function ParameterHelper(requests, query) {
                 }
             }
 
-            if (matchingParameters.length === 0) {
+            if (matchingParameters.length === 0 && shouldHaveRun) {
                 fail(`Query '${query}' was expected to be called with parameters: ${parameter.join(',')}`)
+            } else if (matchingParameters.length !== 0 && !shouldHaveRun) {
+                fail(`Query '${query}' was expected to not have been called with parameters: ${parameter.join(',')}`)
             }
 
-            return this
+            return new ParameterHelper(matchingParameters, query)
         }
     }
 }

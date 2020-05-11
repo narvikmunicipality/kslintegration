@@ -31,7 +31,9 @@ async function Container() {
     let PersonController = require('./controllers/PersonController')
     let VenueController = require('./controllers/VenueController')  
     let VismaXmlDataSource = require('./helper/VismaXmlDataSource')
-    let VismaOrganisationSyncWorker = require('./workers/VismaDatabaseSyncWorker')
+    let VismaDatabaseSpecification = require('./helper/VismaDatabaseSpecification')
+    let VismaDataExtractor = require('./helper/VismaDataExtractor')
+    let VismaDatabaseSyncWorker = require('./workers/VismaDatabaseSyncWorker')
     let EmployeePositionService = require('./services/EmployeePositionService')
     let OrganisationService = require('./services/OrganisationService')
     let PersonService = require('./services/PersonService')
@@ -55,9 +57,19 @@ async function Container() {
     bottle.factory('indexRoutes', c => indexRoutes(c));
 
     // Workers
+    bottle.factory('vismaorganisationextractor', c => new VismaDataExtractor().Organisation)
+    bottle.factory('vismapersonextractor', c => new VismaDataExtractor().Person)
+    bottle.factory('vismaemployeepositionextractor', c => new VismaDataExtractor().EmployeePosition)
+
+    bottle.factory('vismaorganisationdbspec', c => new VismaDatabaseSpecification().Organisation)
+    bottle.factory('vismapersondbspec', c => new VismaDatabaseSpecification().Person)
+    bottle.factory('vismaemployeepositiondbspec', c => new VismaDatabaseSpecification().EmployeePosition)
+
     bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.config.visma.xmlpath, c.readfile, c.xml))
-    bottle.factory('vismaorganisationsyncworker', c => new VismaOrganisationSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource))
-    bottle.factory('workers', c => [c.vismaorganisationsyncworker])
+    bottle.factory('vismaorganisationworker', c => new VismaDatabaseSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaorganisationdbspec, c.vismaorganisationextractor))
+    bottle.factory('vismapersonworker', c => new VismaDatabaseSyncWorker(c.logger('VismaPersonSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismapersondbspec, c.vismapersonextractor))
+    bottle.factory('vismaemployeepositionworker', c => new VismaDatabaseSyncWorker(c.logger('VismaEmployeePositionSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaemployeepositiondbspec, c.vismaemployeepositionextractor))
+    bottle.factory('workers', c => [c.vismaorganisationworker, c.vismapersonworker, c.vismaemployeepositionworker])
 
     // Services
     bottle.factory('EmployeePositionService', c => new EmployeePositionService(c.logger('EmployeePositionService')));

@@ -6,14 +6,25 @@
             <employment>
                 <employeeId>11</employeeId>
                 <positions>
-                    <position isPrimaryPosition="true">
+                    <position isPrimaryPosition="false">
                         <chart id="101"/>
                         <costCentres>
                             <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
                         </costCentres>
                         <positionStartDate>2020-02-01</positionStartDate>
                         <positionInfo>
-                            <positionType name="Stillingstype" value="F"/>
+                            <positionCode name="Konsulent"/>
+                        </positionInfo>
+                    </position>
+                    <position isPrimaryPosition="true">
+                        <chart id="101"/>
+                        <costCentres>
+                            <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
+                        </costCentres>
+                        <positionStartDate>2020-03-01</positionStartDate>
+                        <positionEndDate>2020-05-01</positionEndDate>
+                        <positionInfo>
+                            <positionCode name="Ingeniør"/>
                         </positionInfo>
                     </position>
                 </positions>

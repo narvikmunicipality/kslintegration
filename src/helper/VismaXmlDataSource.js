@@ -34,16 +34,27 @@ function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
                         continue
                     }
 
-                    let positionCode = position.positionInfo.positionCode
+                    const positionCode = position.positionInfo.positionCode
+                    const positionType = position.positionInfo.positionType
+                    const unitId = position.costCentres.dimension2._attributes.value.replace(/^0*/g, '');
+                    const organisationId = position.chart._attributes.id;
 
-                    positions.push({
-                        organisationId: position.chart._attributes.id,
-                        unitId: position.costCentres.dimension2._attributes.value.replace(/^0*/g, ''),
-                        unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
-                        name: positionCode === undefined ? '' : positionCode._attributes.name,
-                        startDate: new Date(position.positionStartDate._text),
-                        isPrimary: position._attributes.isPrimaryPosition == 'true',
-                    })
+                    let matchingUnit = positions.filter(x => x.unitId === unitId && x.organisationId === organisationId)
+                    if (matchingUnit.length > 0 && !matchingUnit[0].isPrimaryPosition) {
+                        positions = positions.filter(x => !(x.unitId === unitId && x.organisationId === organisationId))
+                        matchingUnit = []
+                    }
+                    if (matchingUnit.length === 0) {
+
+                        positions.push({
+                            organisationId: organisationId,
+                            unitId: unitId,
+                            unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
+                            name: positionCode === undefined ? positionType._attributes.name : positionCode._attributes.name,
+                            startDate: new Date(position.positionStartDate._text),
+                            isPrimaryPosition: position._attributes.isPrimaryPosition == 'true',
+                        })
+                    }
                 }
 
                 persons.push({

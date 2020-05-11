@@ -73,13 +73,13 @@ describe('VismaXmlDataSource', () => {
             })
         }
 
-        for (const { testName, personsIndex, positionIndex, isPrimary: isPrimary } of [
-            { testName: 'First persons first position is primary', personsIndex: 0, positionIndex: 0, isPrimary: true },
-            { testName: 'First persons second position is not primary', personsIndex: 0, positionIndex: 1, isPrimary: false },
-            { testName: 'Second persons position is primary', personsIndex: 1, positionIndex: 0, isPrimary: true }
+        for (const { testName, personsIndex, positionIndex, isPrimaryPosition: isPrimaryPosition } of [
+            { testName: 'First persons first position is primary', personsIndex: 0, positionIndex: 0, isPrimaryPosition: true },
+            { testName: 'First persons second position is not primary', personsIndex: 0, positionIndex: 1, isPrimaryPosition: false },
+            { testName: 'Second persons position is primary', personsIndex: 1, positionIndex: 0, isPrimaryPosition: true }
         ]) {
             it(testName, async () => {
-                expect((await source.getPersons())[personsIndex].positions[positionIndex].isPrimary).toBe(isPrimary)
+                expect((await source.getPersons())[personsIndex].positions[positionIndex].isPrimaryPosition).toBe(isPrimaryPosition)
             })
         }
 
@@ -132,7 +132,7 @@ describe('VismaXmlDataSource', () => {
             it(testName, async () => {
                 expect((await source.getPersons())[personsIndex].positions[positionIndex].unitName).toEqual(unitName)
             })
-        }        
+        }
     })
 
     describe('person with no positions', () => {
@@ -150,8 +150,8 @@ describe('VismaXmlDataSource', () => {
             source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_positioncode.xml', fsfread, xml2js)
         })
 
-        it('position name is empty string', async () => {
-            expect((await source.getPersons())[0].positions[0].name).toEqual('')
+        it('position name is set to position type', async () => {
+            expect((await source.getPersons())[0].positions[0].name).toEqual('Stillingstype')
         })
     })
 
@@ -173,8 +173,8 @@ describe('VismaXmlDataSource', () => {
         it('positions is empty array', async () => {
             expect((await source.getPersons())[0].positions.length).toEqual(0)
         })
-    })    
-    
+    })
+
     describe('person with no dimension2', () => {
         beforeEach(() => {
             source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_dimension2.xml', fsfread, xml2js)
@@ -182,6 +182,38 @@ describe('VismaXmlDataSource', () => {
 
         it('positions is empty array', async () => {
             expect((await source.getPersons())[0].positions.length).toEqual(0)
+        })
+    })
+
+    describe('person with two positions in same unit as primary', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_multiple_position_same_unit_as_primary.xml', fsfread, xml2js)
+        })
+
+        it('positions is truncated to only one', async () => {
+            expect((await source.getPersons())[0].positions.length).toEqual(1)
+        })
+
+        it('position left is primary position', async () => {
+            expect((await source.getPersons())[0].positions[0].isPrimaryPosition).toBe(true)
+        })
+    })
+
+    describe('person with two positions in same unit and single unit for primary', () => {
+        beforeEach(() => {
+            source = new VismaXmlDataSource('spec/testdata/visma_person_with_multiple_position_same_unit_not_as_primary.xml', fsfread, xml2js)
+        })
+
+        it('positions is truncated to two', async () => {
+            expect((await source.getPersons())[0].positions.length).toEqual(2)
+        })
+
+        it('first position is primary position', async () => {
+            expect((await source.getPersons())[0].positions[0].isPrimaryPosition).toBe(true)
+        })
+
+        it('second position is not primary position', async () => {
+            expect((await source.getPersons())[0].positions[1].isPrimaryPosition).toBe(false)
         })
     })
 })

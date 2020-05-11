@@ -1,8 +1,8 @@
-// describe('EmployeePositionService', () => {
-//     const EmployeePositionService = require('../../src/services/EmployeePositionService')
-//     var service
+describe('EmployeePositionService', () => {
+    const EmployeePositionService = require('../../src/services/EmployeePositionService')
+    var service
 
-//     beforeEach(() => {
-//         service = new EmployeePositionService(undefined)
-//     });
-// });
+    beforeEach(() => {
+        service = new EmployeePositionService(undefined)
+    });
+});
