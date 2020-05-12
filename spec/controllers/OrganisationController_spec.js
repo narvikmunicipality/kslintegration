@@ -6,7 +6,7 @@ describe('OrganisationController', () => {
     beforeEach(() => {
         organisationServiceMock = jasmine.createSpyObj('OrganisationService', ['getOrganisations']);
         organisationServiceMock.getOrganisations.and.returnValue(Promise.resolve(expectedControllerOrganisationsValue));
-        resultMock = jasmine.createSpyObj('result', ['send']);
+        resultMock = jasmine.createSpyObj('result', ['send', 'set']);
         requestStub = { query: { fromDate: expectedFromDate, toDate: expectedToDate }};
 
         controller = OrganisationController(organisationServiceMock);
@@ -23,4 +23,10 @@ describe('OrganisationController', () => {
 
         expect(resultMock.send).toHaveBeenCalledWith(expectedControllerOrganisationsValue);
     });
+
+    it('sets application type in header', async () => {
+        await controller.get(requestStub, resultMock)
+
+        expect(resultMock.set).toHaveBeenCalledWith('Content-Type', 'application/x-ndjson')
+    })
 });

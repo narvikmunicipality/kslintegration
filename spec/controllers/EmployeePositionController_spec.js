@@ -6,7 +6,7 @@ describe('EmployeePositionController', () => {
     beforeEach(() => {
         employeePositionServiceMock = jasmine.createSpyObj('EmployeePositionService', ['getPositions']);
         employeePositionServiceMock.getPositions.and.returnValue(Promise.resolve(expectedControllerPositionsValue));
-        resultMock = jasmine.createSpyObj('result', ['send']);
+        resultMock = jasmine.createSpyObj('result', ['send', 'set']);
         requestStub = { query: { fromDate: expectedFromDate, toDate: expectedToDate }};
 
         controller = EmployeePositionController(employeePositionServiceMock);
@@ -23,4 +23,10 @@ describe('EmployeePositionController', () => {
 
         expect(resultMock.send).toHaveBeenCalledWith(expectedControllerPositionsValue);
     });
+    
+    it('sets application type in header', async () => {
+        await controller.get(requestStub, resultMock)
+
+        expect(resultMock.set).toHaveBeenCalledWith('Content-Type', 'application/x-ndjson')
+    })
 });

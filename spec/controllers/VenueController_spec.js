@@ -3,7 +3,7 @@ describe('VenueController', () => {
     var controller, resultMock, requestStub
 
     beforeEach(() => {
-        resultMock = jasmine.createSpyObj('result', ['send'])
+        resultMock = jasmine.createSpyObj('result', ['send', 'set'])
 
         controller = VenueController()
     })
@@ -12,5 +12,11 @@ describe('VenueController', () => {
         await controller.get(requestStub, resultMock)
 
         expect(resultMock.send).toHaveBeenCalledWith('')
+    })
+
+    it('sets application type in header', async () => {
+        await controller.get(requestStub, resultMock)
+
+        expect(resultMock.set).toHaveBeenCalledWith('Content-Type', 'application/x-ndjson')
     })
 })

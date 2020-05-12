@@ -3,7 +3,7 @@ describe('EmployeeTaxonomyController', () => {
     var controller, resultMock;
 
     beforeEach(() => {
-        resultMock = jasmine.createSpyObj('result', ['send']);
+        resultMock = jasmine.createSpyObj('result', ['send', 'set']);
 
         controller = EmployeeTaxonomyController();
     });
@@ -13,4 +13,10 @@ describe('EmployeeTaxonomyController', () => {
 
         expect(resultMock.send).toHaveBeenCalledWith('');
     });
+
+    it('sets application type in header', async () => {
+        await controller.get(undefined, resultMock)
+
+        expect(resultMock.set).toHaveBeenCalledWith('Content-Type', 'application/x-ndjson')
+    })    
 });
