@@ -1,7 +1,8 @@
 function ActiveDirectoryService(ldap, clientConfig) {
-    function bindToActiveDirectory(client) {
+    function bindToActiveDirectory(client, clientConfig) {
         return new Promise((resolve, reject) => {
-            client.bind(clientConfig.user, clientConfig.password, (err) => {
+            var config = clientConfig
+            client.bind(config.user, config.password, (err) => {
                 if (err) { reject(err) }
                 else { resolve() }
             })
@@ -45,7 +46,7 @@ function ActiveDirectoryService(ldap, clientConfig) {
     return {
         search: async (filter, attributes) => {
             let client = ldap.createClient({ url: clientConfig.serverUrl, timeout: clientConfig.timeout })
-            await bindToActiveDirectory(client)
+            await bindToActiveDirectory(client, clientConfig)
             return searchActiveDirectoryWithFilter(filter, attributes, client)
         }
     }

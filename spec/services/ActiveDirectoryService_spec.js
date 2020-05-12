@@ -89,7 +89,7 @@ describe('ActiveDirectoryService', () => {
         });
 
         it('throws exception when search fails setup', async () => {
-            ldapClientMock.search.and.callFake((b, o, setupCallback) => { setupCallback('setup error', { on: eventName => { } }); });
+            ldapClientMock.search.and.callFake((b, o, setupCallback) => { setupCallback('setup error', { on: () => { } }); });
 
             try {
                 await service.search(expectedFilter, ['ssn', 'mail']);
@@ -103,7 +103,7 @@ describe('ActiveDirectoryService', () => {
 
         it('does not register on-events when search fails setup', async () => {
             var registeredEvents = 0;
-            ldapClientMock.search.and.callFake((b, o, setupCallback) => { setupCallback('setup error', { on: eventName => { registeredEvents++; } }); });
+            ldapClientMock.search.and.callFake((b, o, setupCallback) => { setupCallback('setup error', { on: () => { registeredEvents++; } }); });
 
             try {
                 await service.search(expectedFilter, ['ssn', 'mail']);
@@ -197,7 +197,7 @@ describe('ActiveDirectoryService', () => {
         it('calls unbind after end event is called', async () => {
             resolveSearchSuccessfullyWithNoItems();
 
-            let result = await service.search(expectedFilter, ['ssn', 'mail']);
+            await service.search(expectedFilter, ['ssn', 'mail']);
 
             expect(ldapClientMock.unbind).toHaveBeenCalledWith(jasmine.anything());
         });

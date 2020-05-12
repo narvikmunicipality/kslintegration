@@ -26,5 +26,14 @@ module.exports = {
     },
     visma: {
         xmlpath: process.env.VISMA_XML_FILE_PATH,
-    }
+    },
+    ldap: {
+        config: {
+            user: process.env.ACTIVE_DIRECTORY_LOOKUP_USER,
+            password: process.env.ACTIVE_DIRECTORY_LOOKUP_PASSWORD,
+            timeout: process.env.ACTIVE_DIRECTORY_LOOKUP_CONNECT_TIMEOUT,
+            serverUrl: process.env.ACTIVE_DIRECTORY_LOOKUP_SERVER_URL,
+            basedn: process.env.ACTIVE_DIRECTORY_LOOKUP_BASEDN,
+        }
+    },
 };

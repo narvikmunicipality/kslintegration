@@ -37,6 +37,7 @@ async function Container() {
     let EmployeePositionService = require('./services/EmployeePositionService')
     let OrganisationService = require('./services/OrganisationService')
     let PersonService = require('./services/PersonService')
+    let ActiveDirectoryService = require('./services/ActiveDirectoryService')
 
     const bottle = new Bottle();
 
@@ -54,16 +55,18 @@ async function Container() {
     bottle.constant('basicauth', require('express-basic-auth'))
 
     // Miscellaneous
+    const ssn2mailList = await (new ActiveDirectoryService(bottle.container.ldap, bottle.container.config.ldap.config)).search('(&(ssn=*)(mail=*))', ['ssn', 'mail'])
     bottle.factory('indexRoutes', c => indexRoutes(c));
+    bottle.factory('ssn2mail', () => ssn2mailList)
 
     // Workers
-    bottle.factory('vismaorganisationextractor', c => new VismaDataExtractor().Organisation)
-    bottle.factory('vismapersonextractor', c => new VismaDataExtractor().Person)
-    bottle.factory('vismaemployeepositionextractor', c => new VismaDataExtractor().EmployeePosition)
+    bottle.factory('vismaorganisationextractor', () => new VismaDataExtractor().Organisation)
+    bottle.factory('vismapersonextractor', c => new VismaDataExtractor().Person(c.ssn2mail))
+    bottle.factory('vismaemployeepositionextractor', () => new VismaDataExtractor().EmployeePosition)
 
-    bottle.factory('vismaorganisationdbspec', c => new VismaDatabaseSpecification().Organisation)
-    bottle.factory('vismapersondbspec', c => new VismaDatabaseSpecification().Person)
-    bottle.factory('vismaemployeepositiondbspec', c => new VismaDatabaseSpecification().EmployeePosition)
+    bottle.factory('vismaorganisationdbspec', () => new VismaDatabaseSpecification().Organisation)
+    bottle.factory('vismapersondbspec', () => new VismaDatabaseSpecification().Person)
+    bottle.factory('vismaemployeepositiondbspec', () => new VismaDatabaseSpecification().EmployeePosition)
 
     bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.config.visma.xmlpath, c.readfile, c.xml))
     bottle.factory('vismaorganisationworker', c => new VismaDatabaseSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaorganisationdbspec, c.vismaorganisationextractor))

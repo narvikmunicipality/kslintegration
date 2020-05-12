@@ -1,6 +1,7 @@
 describe('VismaDataExtractor', () => {
     const VismaDataExtractor = require('../../src/helper/VismaDataExtractor')
     const EMPLOYEE_WITH_TWO_POSITIONS = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', name: 'Konsulent' }, { isPrimaryPosition: false, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', name: 'Ingeniør' }] }
+    const SSN_TO_MAIL_MAP = [{ssn: '01020304050', mail: 'Mail1'}]
     let extractor
 
     beforeEach(() => {
@@ -19,12 +20,20 @@ describe('VismaDataExtractor', () => {
 
     describe('extracts and maps values correctly for Person table', () => {
         it('for first position', () => {
-            expect(extractor.Person.createMap(EMPLOYEE_WITH_TWO_POSITIONS, 0)).toEqual({ SocialSecurityNumber: '01020304050', FirstName: 'GivenName', LastName: 'FamilyName', EmployeeId: '11'/*, Email: 'Mail' */ })
+            expect(extractor.Person(SSN_TO_MAIL_MAP).createMap(EMPLOYEE_WITH_TWO_POSITIONS, 0)).toEqual({ SocialSecurityNumber: '01020304050', FirstName: 'GivenName', LastName: 'FamilyName', EmployeeId: '11', Email: 'Mail1' })
         })
 
         it('for second position', () => {
-            expect(extractor.Person.createMap(EMPLOYEE_WITH_TWO_POSITIONS, 1)).toEqual({ SocialSecurityNumber: '01020304050', FirstName: 'GivenName', LastName: 'FamilyName', EmployeeId: '11'/*, Email: 'Mail' */ })
+            expect(extractor.Person(SSN_TO_MAIL_MAP).createMap(EMPLOYEE_WITH_TWO_POSITIONS, 1)).toEqual({ SocialSecurityNumber: '01020304050', FirstName: 'GivenName', LastName: 'FamilyName', EmployeeId: '11', Email: 'Mail1' })
         })
+
+        it('sets dummy address when missing address', () => {
+            expect(extractor.Person([]).createMap(EMPLOYEE_WITH_TWO_POSITIONS, 1)).toEqual({ SocialSecurityNumber: '01020304050', FirstName: 'GivenName', LastName: 'FamilyName', EmployeeId: '11', Email: 'har.ikke.e-post@example.com' })
+        })
+        
+        it('sets dummy address when address is whitespace', () => {
+            expect(extractor.Person([{ssn: '01020304050', mail: ' '}]).createMap(EMPLOYEE_WITH_TWO_POSITIONS, 1)).toEqual({ SocialSecurityNumber: '01020304050', FirstName: 'GivenName', LastName: 'FamilyName', EmployeeId: '11', Email: 'har.ikke.e-post@example.com' })
+        })    
     })
 
     describe('extracts and maps values correctly for EmployeePosition table', () => {
