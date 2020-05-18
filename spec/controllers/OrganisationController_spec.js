@@ -4,8 +4,8 @@ describe('OrganisationController', () => {
     var controller, organisationServiceMock, resultMock, requestStub;
 
     beforeEach(() => {
-        organisationServiceMock = jasmine.createSpyObj('OrganisationService', ['getOrganisations']);
-        organisationServiceMock.getOrganisations.and.returnValue(Promise.resolve(expectedControllerOrganisationsValue));
+        organisationServiceMock = jasmine.createSpyObj('DataRangeReceiver', ['get']);
+        organisationServiceMock.get.and.returnValue(Promise.resolve(expectedControllerOrganisationsValue));
         resultMock = jasmine.createSpyObj('result', ['send', 'set']);
         requestStub = { query: { fromDate: expectedFromDate, toDate: expectedToDate }};
 
@@ -15,7 +15,7 @@ describe('OrganisationController', () => {
     it('queries service with fromDate and toDate keywords in query string', async () => {
         await controller.get(requestStub, resultMock);
 
-        expect(organisationServiceMock.getOrganisations).toHaveBeenCalledWith(expectedFromDate, expectedToDate);
+        expect(organisationServiceMock.get).toHaveBeenCalledWith(expectedFromDate, expectedToDate);
     });
 
     it('sends result from getOrganisations as result to query', async () => {

@@ -4,8 +4,8 @@ describe('EmployeePositionController', () => {
     var controller, employeePositionServiceMock, resultMock, requestStub;
 
     beforeEach(() => {
-        employeePositionServiceMock = jasmine.createSpyObj('EmployeePositionService', ['getPositions']);
-        employeePositionServiceMock.getPositions.and.returnValue(Promise.resolve(expectedControllerPositionsValue));
+        employeePositionServiceMock = jasmine.createSpyObj('EmployeePositionService', ['get']);
+        employeePositionServiceMock.get.and.returnValue(Promise.resolve(expectedControllerPositionsValue));
         resultMock = jasmine.createSpyObj('result', ['send', 'set']);
         requestStub = { query: { fromDate: expectedFromDate, toDate: expectedToDate }};
 
@@ -15,10 +15,10 @@ describe('EmployeePositionController', () => {
     it('queries service with fromDate and toDate keywords in query string', async () => {
         await controller.get(requestStub, resultMock);
 
-        expect(employeePositionServiceMock.getPositions).toHaveBeenCalledWith(expectedFromDate, expectedToDate);
+        expect(employeePositionServiceMock.get).toHaveBeenCalledWith(expectedFromDate, expectedToDate);
     });
 
-    it('sends result from getPositions as result to query', async () => {
+    it('sends result from get as result to query', async () => {
         await controller.get(requestStub, resultMock);
 
         expect(resultMock.send).toHaveBeenCalledWith(expectedControllerPositionsValue);
