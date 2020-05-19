@@ -25,14 +25,14 @@ function DataRangeRetriever(spec, map, sqlserver) {
                 }
             } else {
                 // Retrieve id's for every item that has been deleted in the given period.
-                let result = await sqlserver.request()
+                let deletedResult = await sqlserver.request()
                     .input('fromDate', new Date(fromDate).toISOString())
                     .input('toDate', new Date(toDate).toISOString())
                     .query(`SELECT ${spec.id_columns.join(',')} FROM ${spec.tablename} WHERE FromDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL`)
 
-                // Retrieve full item for old and new record within given period.
-                for (let result_i = 0; result_i < result.recordset.length; result_i++) {
-                    const item = result.recordset[result_i]
+                // Retrieve full item for old record within given period.
+                for (let result_i = 0; result_i < deletedResult.recordset.length; result_i++) {
+                    const item = deletedResult.recordset[result_i]
 
                     let deletedItemsRequest = await sqlserver.request()
                         .input('fromDate', new Date(fromDate).toISOString())
@@ -42,14 +42,45 @@ function DataRangeRetriever(spec, map, sqlserver) {
                         deletedItemsRequest.input(idcolumn, item[idcolumn])
                     }
 
-                    let deletedItems = await deletedItemsRequest.query(`SELECT * FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM dbo.Test WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE RowNumber=1 OR RowNumber=Total`)
+                    let deletedItems = await deletedItemsRequest.query(`SELECT ${spec.columns.join(',')},FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM ${spec.tablename} WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE RowNumber=1 OR RowNumber=Total`)
 
                     if (new Date(deletedItems.recordset[0].FromDate) <= new Date(fromDate)) {
-                        let mappedDeletedItem = { changeType: 'modify', changeDate: formatDate(new Date()), oldRecord: {}, newRecord: {} }
+                        let mappedDeletedItem = { changeType: 'modify', changeDate: formatDate(new Date()), oldRecord: {} }
                         mapRecordToItem(mappedDeletedItem.oldRecord, deletedItems.recordset[0])
-                        mapRecordToItem(mappedDeletedItem.newRecord, deletedItems.recordset[1])
                         items.push(mappedDeletedItem)
                     }
+                }
+
+                // Retrieve id's for every item that has been changed in the given period.
+                let changedResult = await sqlserver.request()
+                    .input('fromDate', new Date(fromDate).toISOString())
+                    .input('toDate', new Date(toDate).toISOString())
+                    .query(`SELECT ${spec.id_columns.join(',')} FROM ${spec.tablename} a WHERE a.FromDate >= Convert(datetime,@fromDate) AND a.FromDate < Convert(datetime,@toDate) AND ((a.ToDate IS NULL AND a.NewVersionId IS NULL) OR Convert(datetime,@toDate) < (SELECT b.FromDate FROM ${spec.tablename} b WHERE a.NewVersionId = b.InternalId))`)
+
+                // Retrieve full item for old and new record within given period.
+                for (let result_i = 0; result_i < changedResult.recordset.length; result_i++) {
+                    const item = changedResult.recordset[result_i]
+
+                    let changedItemsRequest = await sqlserver.request()
+                        .input('fromDate', new Date(fromDate).toISOString())
+                        .input('toDate', new Date(toDate).toISOString())
+
+                    for (const idcolumn of spec.id_columns) {
+                        changedItemsRequest.input(idcolumn, item[idcolumn])
+                    }
+
+                    let changedItems = await changedItemsRequest.query(`SELECT ${spec.columns.join(',')},FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM ${spec.tablename} WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE RowNumber=1 OR RowNumber=Total`)
+
+                    let mappedChangedItem
+                    if (changedItems.recordset.length === 1) {
+                        mappedChangedItem = { changeType: 'modify', changeDate: formatDate(new Date()), newRecord: {} }
+                        mapRecordToItem(mappedChangedItem.newRecord, changedItems.recordset[0])
+                    } else {
+                        mappedChangedItem = { changeType: 'modify', changeDate: formatDate(new Date()), oldRecord: {}, newRecord: {} }                        
+                        mapRecordToItem(mappedChangedItem.oldRecord, changedItems.recordset[0])
+                        mapRecordToItem(mappedChangedItem.newRecord, changedItems.recordset[1])
+                    }
+                    items.push(mappedChangedItem)
                 }
             }
 
