@@ -17,16 +17,16 @@ describe('DataRangeRetriever', () => {
     const MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2' }], output: {}, rowsAffected: [1] }
     const SINGLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT = { recordset: [{ TestId: '1' }, { TestId: '2' }], output: {}, rowsAffected: [2] }
     const MULTIPLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2' }, { TestId1: '3', TestId2: '4' }], output: {}, rowsAffected: [2] }
-    const SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1 = { recordset: [{ TestId: '1', Value: 'Test1', FromDate: '2020-05-12T00:00:00Z' }, { TestId: '2', Value: 'Test2', FromDate: '2020-05-12T00:05:00Z' }], output: {}, rowsAffected: [2] }
-    const MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1 = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2', FromDate: '2020-05-12T00:00:00Z' }, { TestId1: '3', TestId2: '4', Value1: 'Test3', Value2: 'Test4', FromDate: '2020-05-12T00:05:00Z' }], output: {}, rowsAffected: [2] }
-    const SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2 = { recordset: [{ TestId: '3', Value: 'Test3', FromDate: '2020-05-12T00:00:00Z' }, { TestId: '4', Value: 'Test4', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
-    const MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2 = { recordset: [{ TestId1: '5', TestId2: '6', Value1: 'Test5', Value2: 'Test6', FromDate: '2020-05-12T00:00:00Z' }, { TestId1: '7', TestId2: '8', Value1: 'Test7', Value2: 'Test8', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
+    const SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1 = { recordset: [{ TestId: '1', Value: 'Test1', FromDate: '2020-05-12T00:00:00Z', ToDate: '2020-05-12T00:10:00Z' }, { TestId: '2', Value: 'Test2', FromDate: '2020-05-12T00:15:00Z' }], output: {}, rowsAffected: [2] }
+    const MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1 = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2', FromDate: '2020-05-12T00:00:00Z', ToDate: '2020-05-12T00:05:00Z' }, { TestId1: '3', TestId2: '4', Value1: 'Test3', Value2: 'Test4', FromDate: '2020-05-12T00:05:00Z' }], output: {}, rowsAffected: [2] }
+    const SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2 = { recordset: [{ TestId: '3', Value: 'Test3', FromDate: '2020-05-12T00:00:00Z', ToDate: '2020-05-12T00:05:00Z' }, { TestId: '4', Value: 'Test4', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
+    const MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2 = { recordset: [{ TestId1: '5', TestId2: '6', Value1: 'Test5', Value2: 'Test6', FromDate: '2020-05-12T00:00:00Z', ToDate: '2020-05-12T00:10:00Z' }, { TestId1: '7', TestId2: '8', Value1: 'Test7', Value2: 'Test8', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
 
-    const SINGLE_SPEC_NEW_RECORD_DATE_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'Test1', FromDate: '2020-05-12T00:00:00Z' }], output: {}, rowsAffected: [1] }
-    const MULTIPLE_SPEC_NEW_RECORD_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2', FromDate: '2020-05-12T00:00:00Z' }], output: {}, rowsAffected: [1] }
+    const SINGLE_SPEC_NEW_RECORD_DATE_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'Test1', FromDate: '2020-05-12T00:03:00Z' }], output: {}, rowsAffected: [1] }
+    const MULTIPLE_SPEC_NEW_RECORD_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2', FromDate: '2020-05-12T00:04:00Z' }], output: {}, rowsAffected: [1] }
 
-    const SINGLE_SPEC_OLDNEW_RECORD_WITHIN_PERIOD_DATE_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'Test1', FromDate: '2020-05-12T00:05:00Z' }, { TestId: '2', Value: 'Test2', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
-    const MULTIPLE_SPEC_OLDNEW_RECORD_WITHIN_PERIOD_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2', FromDate: '2020-05-12T00:05:00Z' }, { TestId1: '3', TestId2: '4', Value1: 'Test3', Value2: 'Test4', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
+    const SINGLE_SPEC_OLDNEW_RECORD_WITHIN_PERIOD_DATE_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'Test1', FromDate: '2020-05-12T00:05:00Z', ToDate: '2020-05-12T00:10:00Z' }, { TestId: '2', Value: 'Test2', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
+    const MULTIPLE_SPEC_OLDNEW_RECORD_WITHIN_PERIOD_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2', FromDate: '2020-05-12T00:05:00Z', ToDate: '2020-05-12T00:10:00Z' }, { TestId1: '3', TestId2: '4', Value1: 'Test3', Value2: 'Test4', FromDate: '2020-05-12T00:10:00Z' }], output: {}, rowsAffected: [2] }
 
     var retriever, queryReturns, requests, sqlMock, mockDate = new Date('2020-05-14T08:29:42.386Z')
 
@@ -114,8 +114,8 @@ describe('DataRangeRetriever', () => {
     describe('with date range', () => {
         describe('deletion', () => {
             for (const { testname, spec, map, queryResults, expectedSql } of [
-                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, EMPTY_SQL_RESULT], expectedSql: "SELECT TestId FROM TestSingle WHERE FromDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL" },
-                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, EMPTY_SQL_RESULT], expectedSql: "SELECT TestId1,TestId2 FROM TestMultiple WHERE FromDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL" },
+                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, EMPTY_SQL_RESULT], expectedSql: "SELECT TestId FROM TestSingle WHERE ToDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL" },
+                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, EMPTY_SQL_RESULT], expectedSql: "SELECT TestId1,TestId2 FROM TestMultiple WHERE ToDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL" },
             ]) {
                 it(`queries for deleted items with ${testname} within date range`, async () => {
                     queryReturns = queryReturns.concat(queryResults)
@@ -133,7 +133,7 @@ describe('DataRangeRetriever', () => {
                     spec: SINGLE_SPEC,
                     map: SINGLE_MAPPING,
                     queryResults: [SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, EMPTY_SQL_RESULT],
-                    expectedSql: "SELECT TestId,Value,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId,Value,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: { TestId: '1' },
                 },
                 {
@@ -141,7 +141,7 @@ describe('DataRangeRetriever', () => {
                     spec: MULTIPLE_SPEC,
                     map: MULTIPLE_MAPPING,
                     queryResults: [MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, EMPTY_SQL_RESULT],
-                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: { TestId1: '1', TestId2: '2' },
                 },
             ]) {
@@ -164,7 +164,7 @@ describe('DataRangeRetriever', () => {
                     spec: SINGLE_SPEC,
                     map: SINGLE_MAPPING,
                     queryResults: [SINGLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2, EMPTY_SQL_RESULT],
-                    expectedSql: "SELECT TestId,Value,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId,Value,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: [{ TestId: '1' }, { TestId: '2' }],
                 },
                 {
@@ -172,7 +172,7 @@ describe('DataRangeRetriever', () => {
                     spec: MULTIPLE_SPEC,
                     map: MULTIPLE_MAPPING,
                     queryResults: [MULTIPLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2, EMPTY_SQL_RESULT],
-                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: [{ TestId1: '1', TestId2: '2' }, { TestId1: '3', TestId2: '4' }],
                 },
             ]) {
@@ -197,14 +197,14 @@ describe('DataRangeRetriever', () => {
                     spec: SINGLE_SPEC,
                     map: SINGLE_MAPPING,
                     queryResults: [SINGLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2, EMPTY_SQL_RESULT],
-                    expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { main_id: '1', content: 'Test1' } }) + '\n' + JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { main_id: '3', content: 'Test3' } })
+                    expectedResult: JSON.stringify({ changeType: 'delete', changeDate: '2020-05-12T00:10:00Z', oldRecord: { main_id: '1', content: 'Test1' } }) + '\n' + JSON.stringify({ changeType: 'delete', changeDate: '2020-05-12T00:05:00Z', oldRecord: { main_id: '3', content: 'Test3' } })
                 },
                 {
                     testname: 'multiple spec',
                     spec: MULTIPLE_SPEC,
                     map: MULTIPLE_MAPPING,
                     queryResults: [MULTIPLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2, EMPTY_SQL_RESULT],
-                    expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) + '\n' + JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { primary_id: '5', secondary_id: '6', vendor: 'Test5', model: 'Test6' } }),
+                    expectedResult: JSON.stringify({ changeType: 'delete', changeDate: '2020-05-12T00:05:00Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) + '\n' + JSON.stringify({ changeType: 'delete', changeDate: '2020-05-12T00:10:00Z', oldRecord: { primary_id: '5', secondary_id: '6', vendor: 'Test5', model: 'Test6' } }),
                 },
             ]) {
                 it(`returns multiple deleted id's on multiple lines with ${testname}`, async () => {
@@ -218,8 +218,8 @@ describe('DataRangeRetriever', () => {
             }
 
             for (const { testname, spec, map, queryResults, expectedResult } of [
-                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, EMPTY_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { main_id: '1', content: 'Test1' } }) },
-                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, EMPTY_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) },
+                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, EMPTY_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'delete', changeDate: '2020-05-12T00:10:00Z', oldRecord: { main_id: '1', content: 'Test1' } }) },
+                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, EMPTY_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'delete', changeDate: '2020-05-12T00:05:00Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) },
             ]) {
                 it(`returns single deleted item on single line with ${testname}`, async () => {
                     queryReturns = queryReturns.concat(queryResults)
@@ -267,7 +267,7 @@ describe('DataRangeRetriever', () => {
                     spec: SINGLE_SPEC,
                     map: SINGLE_MAPPING,
                     queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1],
-                    expectedSql: "SELECT TestId,Value,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId,Value,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: { TestId: '1' },
                 },
                 {
@@ -275,7 +275,7 @@ describe('DataRangeRetriever', () => {
                     spec: MULTIPLE_SPEC,
                     map: MULTIPLE_MAPPING,
                     queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1],
-                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: { TestId1: '1', TestId2: '2' },
                 },
             ]) {
@@ -298,7 +298,7 @@ describe('DataRangeRetriever', () => {
                     spec: SINGLE_SPEC,
                     map: SINGLE_MAPPING,
                     queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2],
-                    expectedSql: "SELECT TestId,Value,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId,Value,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestSingle WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId=@TestId) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: [{ TestId: '1' }, { TestId: '2' }],
                 },
                 {
@@ -306,7 +306,7 @@ describe('DataRangeRetriever', () => {
                     spec: MULTIPLE_SPEC,
                     map: MULTIPLE_MAPPING,
                     queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2],
-                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE RowNumber=1 OR RowNumber=Total",
+                    expectedSql: "SELECT TestId1,TestId2,Value1,Value2,FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM TestMultiple WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND TestId1=@TestId1 AND TestId2=@TestId2) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total",
                     expectedParameters: [{ TestId1: '1', TestId2: '2' }, { TestId1: '3', TestId2: '4' }],
                 },
             ]) {
@@ -331,17 +331,17 @@ describe('DataRangeRetriever', () => {
                     spec: SINGLE_SPEC,
                     map: SINGLE_MAPPING,
                     queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2],
-                    expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { main_id: '1', content: 'Test1' }, newRecord: { main_id: '2', content: 'Test2' } }) + '\n' + JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { main_id: '3', content: 'Test3' }, newRecord: { main_id: '4', content: 'Test4' } })
+                    expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-12T00:15:00Z', oldRecord: { main_id: '1', content: 'Test1' }, newRecord: { main_id: '2', content: 'Test2' } }) + '\n' + JSON.stringify({ changeType: 'modify', changeDate: '2020-05-12T00:10:00Z', oldRecord: { main_id: '3', content: 'Test3' }, newRecord: { main_id: '4', content: 'Test4' } })
                 },
                 {
                     testname: 'multiple spec',
                     spec: MULTIPLE_SPEC,
                     map: MULTIPLE_MAPPING,
                     queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_MULTIPLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_2],
-                    expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' }, newRecord: { primary_id: '3', secondary_id: '4', vendor: 'Test3', model: 'Test4' } }) + '\n' + JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { primary_id: '5', secondary_id: '6', vendor: 'Test5', model: 'Test6' }, newRecord: { primary_id: '7', secondary_id: '8', vendor: 'Test7', model: 'Test8' } }),
+                    expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-12T00:05:00Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' }, newRecord: { primary_id: '3', secondary_id: '4', vendor: 'Test3', model: 'Test4' } }) + '\n' + JSON.stringify({ changeType: 'modify', changeDate: '2020-05-12T00:10:00Z', oldRecord: { primary_id: '5', secondary_id: '6', vendor: 'Test5', model: 'Test6' }, newRecord: { primary_id: '7', secondary_id: '8', vendor: 'Test7', model: 'Test8' } }),
                 },
             ]) {
-                it(`returns multiple deleted id's on multiple lines with ${testname}`, async () => {
+                it(`returns multiple changed id's on multiple lines with ${testname}`, async () => {
                     queryReturns = queryReturns.concat(queryResults)
                     retriever = createRetriever(spec, map)
 
@@ -352,8 +352,8 @@ describe('DataRangeRetriever', () => {
             }
 
             for (const { testname, spec, map, queryResults, expectedResult } of [
-                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { main_id: '1', content: 'Test1' }, newRecord: { main_id: '2', content: 'Test2' } }) },
-                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' }, newRecord: { primary_id: '3', secondary_id: '4', vendor: 'Test3', model: 'Test4' } }) },
+                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-12T00:15:00Z', oldRecord: { main_id: '1', content: 'Test1' }, newRecord: { main_id: '2', content: 'Test2' } }) },
+                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_OLDNEW_RECORD_DATE_SQL_RESULT_1], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-12T00:05:00Z', oldRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' }, newRecord: { primary_id: '3', secondary_id: '4', vendor: 'Test3', model: 'Test4' } }) },
             ]) {
                 it(`returns single changed item on single line with ${testname}`, async () => {
                     queryReturns = queryReturns.concat(queryResults)
@@ -366,8 +366,8 @@ describe('DataRangeRetriever', () => {
             }
 
             for (const { testname, spec, map, queryResults, expectedResult } of [
-                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_NEW_RECORD_DATE_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', newRecord: { main_id: '1', content: 'Test1' } }) },
-                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_NEW_RECORD_DATE_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'modify', changeDate: '2020-05-14T08:29:42Z', newRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) },
+                { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, SINGLE_SPEC_NEW_RECORD_DATE_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'add', changeDate: '2020-05-12T00:03:00Z', newRecord: { main_id: '1', content: 'Test1' } }) },
+                { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResults: [EMPTY_SQL_RESULT, MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT, MULTIPLE_SPEC_NEW_RECORD_DATE_SQL_RESULT], expectedResult: JSON.stringify({ changeType: 'add', changeDate: '2020-05-12T00:04:00Z', newRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) },
             ]) {
                 it(`returns only newRecord when old/newRecord query only returns one row with ${testname}`, async () => {
                     queryReturns = queryReturns.concat(queryResults)

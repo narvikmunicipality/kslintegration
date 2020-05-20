@@ -28,7 +28,7 @@ function DataRangeRetriever(spec, map, sqlserver) {
                 let deletedResult = await sqlserver.request()
                     .input('fromDate', new Date(fromDate).toISOString())
                     .input('toDate', new Date(toDate).toISOString())
-                    .query(`SELECT ${spec.id_columns.join(',')} FROM ${spec.tablename} WHERE FromDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL`)
+                    .query(`SELECT ${spec.id_columns.join(',')} FROM ${spec.tablename} WHERE ToDate >= Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate) AND NewVersionId IS NULL`)
 
                 // Retrieve full item for old record within given period.
                 for (let result_i = 0; result_i < deletedResult.recordset.length; result_i++) {
@@ -42,10 +42,10 @@ function DataRangeRetriever(spec, map, sqlserver) {
                         deletedItemsRequest.input(idcolumn, item[idcolumn])
                     }
 
-                    let deletedItems = await deletedItemsRequest.query(`SELECT ${spec.columns.join(',')},FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM ${spec.tablename} WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE RowNumber=1 OR RowNumber=Total`)
+                    let deletedItems = await deletedItemsRequest.query(`SELECT ${spec.columns.join(',')},FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM ${spec.tablename} WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total`)
 
                     if (new Date(deletedItems.recordset[0].FromDate) <= new Date(fromDate)) {
-                        let mappedDeletedItem = { changeType: 'modify', changeDate: formatDate(new Date()), oldRecord: {} }
+                        let mappedDeletedItem = { changeType: 'delete', changeDate: formatDate(new Date(deletedItems.recordset[0].ToDate)), oldRecord: {} }
                         mapRecordToItem(mappedDeletedItem.oldRecord, deletedItems.recordset[0])
                         items.push(mappedDeletedItem)
                     }
@@ -69,14 +69,14 @@ function DataRangeRetriever(spec, map, sqlserver) {
                         changedItemsRequest.input(idcolumn, item[idcolumn])
                     }
 
-                    let changedItems = await changedItemsRequest.query(`SELECT ${spec.columns.join(',')},FromDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM ${spec.tablename} WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE RowNumber=1 OR RowNumber=Total`)
+                    let changedItems = await changedItemsRequest.query(`SELECT ${spec.columns.join(',')},FromDate,ToDate FROM (SELECT ROW_NUMBER() OVER (ORDER BY InternalId) AS RowNumber, COUNT(*) OVER () AS Total,* FROM ${spec.tablename} WHERE ((FromDate >= Convert(datetime,@fromDate) AND FromDate < Convert(datetime,@toDate)) OR (ToDate > Convert(datetime,@fromDate) AND ToDate < Convert(datetime,@toDate))) AND ${spec.id_columns.map(x => `${x}=@${x}`).join(' AND ')}) a WHERE (RowNumber=1 AND FromDate <= Convert(datetime,@fromDate)) OR RowNumber=Total`)
 
                     let mappedChangedItem
                     if (changedItems.recordset.length === 1) {
-                        mappedChangedItem = { changeType: 'modify', changeDate: formatDate(new Date()), newRecord: {} }
+                        mappedChangedItem = { changeType: 'add', changeDate: formatDate(new Date(changedItems.recordset[0].FromDate)), newRecord: {} }
                         mapRecordToItem(mappedChangedItem.newRecord, changedItems.recordset[0])
                     } else {
-                        mappedChangedItem = { changeType: 'modify', changeDate: formatDate(new Date()), oldRecord: {}, newRecord: {} }                        
+                        mappedChangedItem = { changeType: 'modify', changeDate: formatDate(new Date(changedItems.recordset[1].FromDate)), oldRecord: {}, newRecord: {} }                        
                         mapRecordToItem(mappedChangedItem.oldRecord, changedItems.recordset[0])
                         mapRecordToItem(mappedChangedItem.newRecord, changedItems.recordset[1])
                     }
