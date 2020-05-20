@@ -22,6 +22,7 @@
     "ldapjs-no-python": "^1.0.3",
     "log4js": "^6.1.0",
     "mssql": "^6.2.0",
+    "nodemon": "^2.0.4",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
