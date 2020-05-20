@@ -27,14 +27,8 @@ Task("npm install")
     NpmInstall();
 });
 
-Task("eslint")
-    .IsDependentOn("npm install")
-    .Does(() => {
-    NpmRunScript(new NpmRunScriptSettings { ScriptName = "pretest" });
-});
-
 Task("Jasmine tests")
-    .IsDependentOn("eslint")
+    .IsDependentOn("npm install")
     .Does(() =>
 {
     NpmRunScript(new NpmRunScriptSettings { ScriptName = "test" });
@@ -60,6 +54,7 @@ Task("Package")
     files.Add(GetFiles(sourceFiles));
 
     Zip("./", zipFile, files);
+    Information($"Package created: {zipFile}");
 });
 
 Task("Default")
