@@ -72,7 +72,8 @@ async function Container() {
     bottle.factory('employeepositiondatabaseservicemap', () => new DatabaseServiceMap().EmployeePosition)
     bottle.factory('persondatabaseservicemap', () => new DatabaseServiceMap().Person)
 
-    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.config.visma.xmlpath, c.readfile, c.xml))
+    bottle.factory('vismaxmlfilereader', async c => await c.readfile(c.config.visma.xmlpath))
+    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.vismaxmlfilereader, c.xml))
     bottle.factory('vismaorganisationworker', c => new VismaDatabaseSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaorganisationdbspec, c.vismaorganisationextractor))
     bottle.factory('vismapersonworker', c => new VismaDatabaseSyncWorker(c.logger('VismaPersonSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismapersondbspec, c.vismapersonextractor))
     bottle.factory('vismaemployeepositionworker', c => new VismaDatabaseSyncWorker(c.logger('VismaEmployeePositionSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaemployeepositiondbspec, c.vismaemployeepositionextractor))

@@ -1,4 +1,4 @@
-function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
+function VismaXmlDataSource(vismaXml, parseXml) {
     function isExpired(position) {
         return position.positionEndDate && new Date(position.positionEndDate._text) <= new Date()
     }
@@ -17,7 +17,7 @@ function VismaXmlDataSource(vismaXmlPath, fileReader, parseXml) {
 
     return {
         getPersons: async () => {
-            let xml = await parseXml(await fileReader(vismaXmlPath))
+            let xml = await parseXml(vismaXml)
             let personList = Array.isArray(xml.personsXML.person) ? xml.personsXML.person : [xml.personsXML.person]
             let persons = []
 

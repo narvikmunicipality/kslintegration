@@ -15,8 +15,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('persons with every field', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma.xml'), xml2js)
         })
 
         for (const { testName, personsIndex, employeeId } of [
@@ -136,8 +136,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with no positions', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_positions.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_no_positions.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -146,8 +146,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with no positionCode', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_positioncode.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_no_positioncode.xml'), xml2js)
         })
 
         it('position name is set to position type', async () => {
@@ -156,8 +156,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with no chart', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_chart.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_no_chart.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -166,8 +166,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with no chart or dimension2', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_chart_or_dimension2.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_no_chart_or_dimension2.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -176,8 +176,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with no dimension2', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_no_dimension2.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_no_dimension2.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -186,8 +186,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with two positions in same unit as primary', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_multiple_position_same_unit_as_primary.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_multiple_position_same_unit_as_primary.xml'), xml2js)
         })
 
         it('positions is truncated to only one', async () => {
@@ -200,8 +200,8 @@ describe('VismaXmlDataSource', () => {
     })
 
     describe('person with two positions in same unit and single unit for primary', () => {
-        beforeEach(() => {
-            source = new VismaXmlDataSource('spec/testdata/visma_person_with_multiple_position_same_unit_not_as_primary.xml', fsfread, xml2js)
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(await fsfread('spec/testdata/visma_person_with_multiple_position_same_unit_not_as_primary.xml'), xml2js)
         })
 
         it('positions is truncated to two', async () => {
