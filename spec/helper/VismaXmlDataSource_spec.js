@@ -3,9 +3,10 @@ describe('VismaXmlDataSource', () => {
     const fsfread = require('util').promisify(require('fs').readFile)
     const xml2js = xml => require('xml-js').xml2js(xml, { compact: true })
 
-    var source
+    var source, logMock
 
     beforeEach(() => {
+        logMock = jasmine.createSpyObj('log', ['error'])
         jasmine.clock().install()
         jasmine.clock().mockDate(new Date('2020-04-30'))
     })
@@ -16,7 +17,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('persons with every field', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma.xml'), xml2js)
         })
 
         for (const { testName, personsIndex, employeeId } of [
@@ -137,7 +138,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with no positions', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_no_positions.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_positions.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -147,7 +148,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with no positionCode', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_no_positioncode.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_positioncode.xml'), xml2js)
         })
 
         it('position name is set to position type', async () => {
@@ -157,7 +158,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with no chart', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_no_chart.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_chart.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -167,7 +168,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with no chart or dimension2', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_no_chart_or_dimension2.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_chart_or_dimension2.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -177,7 +178,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with no dimension2', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_no_dimension2.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_dimension2.xml'), xml2js)
         })
 
         it('positions is empty array', async () => {
@@ -187,7 +188,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with two positions in same unit as primary', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_multiple_position_same_unit_as_primary.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_multiple_position_same_unit_as_primary.xml'), xml2js)
         })
 
         it('positions is truncated to only one', async () => {
@@ -201,7 +202,7 @@ describe('VismaXmlDataSource', () => {
 
     describe('person with two positions in same unit and single unit for primary', () => {
         beforeEach(async () => {
-            source = new VismaXmlDataSource(fsfread('spec/testdata/visma_person_with_multiple_position_same_unit_not_as_primary.xml'), xml2js)
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_multiple_position_same_unit_not_as_primary.xml'), xml2js)
         })
 
         it('positions is truncated to two', async () => {
@@ -216,4 +217,19 @@ describe('VismaXmlDataSource', () => {
             expect((await source.getPersons())[0].positions[1].isPrimaryPosition).toBe(false)
         })
     })
+
+    describe('person with no start date', () => {
+        beforeEach(async () => {
+            source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_startdate.xml'), xml2js)
+        })
+
+        it('logs record that has failed', async () => {
+            try {
+                await source.getPersons()
+                fail('Should throw TypeError')
+            } catch (e) {
+                expect(logMock.error).toHaveBeenCalledWith('{"_attributes":{"personIdHRM":"1"},"employments":{"employment":{"employeeId":{"_text":"11"},"positions":{"position":{"_attributes":{"isPrimaryPosition":"true"},"chart":{"_attributes":{"id":"101"}},"costCentres":{"dimension2":{"_attributes":{"name":"ENHETSNAVN 1","value":"000000001001"}}},"positionInfo":{"positionCode":{"_attributes":{"name":"Konsulent"}}}}}}},"familyName":{"_text":"Nordmann"},"givenName":{"_text":"Ola"},"ssn":{"_text":"01020304050"}}')
+            }
+        })
+    })    
 })

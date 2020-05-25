@@ -1,4 +1,4 @@
-function VismaXmlDataSource(vismaXml, parseXml) {
+function VismaXmlDataSource(log, vismaXml, parseXml) {
     function isExpired(position) {
         return position.positionEndDate && new Date(position.positionEndDate._text) <= new Date()
     }
@@ -45,15 +45,20 @@ function VismaXmlDataSource(vismaXml, parseXml) {
                         matchingUnit = []
                     }
                     if (matchingUnit.length === 0) {
-
-                        positions.push({
-                            organisationId: organisationId,
-                            unitId: unitId,
-                            unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
-                            name: positionCode === undefined ? positionType._attributes.name : positionCode._attributes.name,
-                            startDate: new Date(position.positionStartDate._text),
-                            isPrimaryPosition: position._attributes.isPrimaryPosition == 'true',
-                        })
+                        try {
+                            positions.push({
+                                organisationId: organisationId,
+                                unitId: unitId,
+                                unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
+                                name: positionCode === undefined ? positionType._attributes.name : positionCode._attributes.name,
+                                startDate: new Date(position.positionStartDate._text),
+                                isPrimaryPosition: position._attributes.isPrimaryPosition == 'true',
+                            })
+                        }
+                        catch (e) {
+                            log.error(JSON.stringify(xmlPerson))
+                            throw e
+                        }
                     }
                 }
 
