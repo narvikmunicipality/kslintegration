@@ -26,6 +26,9 @@ module.exports = {
     },
     visma: {
         xmlpath: process.env.VISMA_XML_FILE_PATH,
+        ws_url: process.env.VISMA_WS_URL_XML,
+        ws_user: process.env.VISMA_WS_USER,
+        ws_password: process.env.VISMA_WS_PASSWORD,
     },
     ldap: {
         config: {

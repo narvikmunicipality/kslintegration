@@ -17,7 +17,7 @@ function VismaXmlDataSource(vismaXml, parseXml) {
 
     return {
         getPersons: async () => {
-            let xml = await parseXml(vismaXml)
+            let xml = await parseXml(await vismaXml)
             let personList = Array.isArray(xml.personsXML.person) ? xml.personsXML.person : [xml.personsXML.person]
             let persons = []
 
