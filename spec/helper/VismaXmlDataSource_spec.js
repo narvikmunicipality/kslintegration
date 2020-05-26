@@ -223,13 +223,8 @@ describe('VismaXmlDataSource', () => {
             source = new VismaXmlDataSource(logMock, fsfread('spec/testdata/visma_person_with_no_startdate.xml'), xml2js)
         })
 
-        it('logs record that has failed', async () => {
-            try {
-                await source.getPersons()
-                fail('Should throw TypeError')
-            } catch (e) {
-                expect(logMock.error).toHaveBeenCalledWith('{"_attributes":{"personIdHRM":"1"},"employments":{"employment":{"employeeId":{"_text":"11"},"positions":{"position":{"_attributes":{"isPrimaryPosition":"true"},"chart":{"_attributes":{"id":"101"}},"costCentres":{"dimension2":{"_attributes":{"name":"ENHETSNAVN 1","value":"000000001001"}}},"positionInfo":{"positionCode":{"_attributes":{"name":"Konsulent"}}}}}}},"familyName":{"_text":"Nordmann"},"givenName":{"_text":"Ola"},"ssn":{"_text":"01020304050"}}')
-            }
+        it('uses validFromDate instead', async () => {
+            expect((await source.getPersons())[0].positions[0].startDate).toEqual(new Date('2020-04-03'))
         })
-    })    
+    })
 })

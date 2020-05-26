@@ -51,7 +51,7 @@ function VismaXmlDataSource(log, vismaXml, parseXml) {
                                 unitId: unitId,
                                 unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
                                 name: positionCode === undefined ? positionType._attributes.name : positionCode._attributes.name,
-                                startDate: new Date(position.positionStartDate._text),
+                                startDate: new Date(position.positionStartDate && position.positionStartDate._text || position._attributes.validFromDate),
                                 isPrimaryPosition: position._attributes.isPrimaryPosition == 'true',
                             })
                         }

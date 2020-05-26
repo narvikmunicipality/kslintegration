@@ -6,7 +6,7 @@
             <employment>
                 <employeeId>11</employeeId>
                 <positions>
-                    <position isPrimaryPosition="true">
+                    <position isPrimaryPosition="true" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <costCentres>
                             <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
@@ -16,7 +16,7 @@
                             <positionCode name="Konsulent"/>
                         </positionInfo>
                     </position>
-                    <position isPrimaryPosition="false">
+                    <position isPrimaryPosition="false" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <costCentres>
                             <dimension2 name="ENHETSNAVN 2" value="000000001002"/>
@@ -39,7 +39,7 @@
             <employment>
                 <employeeId>12</employeeId>
                 <positions>
-                    <position isPrimaryPosition="true">
+                    <position isPrimaryPosition="true" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <costCentres>
                             <dimension2 name="ENHETSNAVN 3" value="000000001003"/>
@@ -49,7 +49,7 @@
                             <positionCode name="Leder"/>
                         </positionInfo>
                     </position>
-                    <position isPrimaryPosition="false">
+                    <position isPrimaryPosition="false" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <costCentres>
                             <dimension2 name="ENHETSNAVN 4" value="000000001004"/>

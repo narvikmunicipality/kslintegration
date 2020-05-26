@@ -6,7 +6,7 @@
             <employment>
                 <employeeId>11</employeeId>
                 <positions>
-                    <position isPrimaryPosition="true">
+                    <position isPrimaryPosition="true" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <positionStartDate>2020-02-01</positionStartDate>
                         <positionInfo>

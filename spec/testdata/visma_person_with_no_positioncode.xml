@@ -6,7 +6,7 @@
             <employment>
                 <employeeId>11</employeeId>
                 <positions>
-                    <position isPrimaryPosition="true">
+                    <position isPrimaryPosition="true" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <costCentres>
                             <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
