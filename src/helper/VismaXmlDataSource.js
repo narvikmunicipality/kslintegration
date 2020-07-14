@@ -1,4 +1,4 @@
-function VismaXmlDataSource(log, vismaXml, parseXml) {
+function VismaXmlDataSource(log, vismaXml, parseXml, config) {
     function isExpired(position) {
         return position.positionEndDate && new Date(position.positionEndDate._text) <= new Date()
     }
@@ -53,6 +53,7 @@ function VismaXmlDataSource(log, vismaXml, parseXml) {
                                 name: positionCode === undefined ? positionType._attributes.name : positionCode._attributes.name,
                                 startDate: new Date(position.positionStartDate && position.positionStartDate._text || position._attributes.validFromDate),
                                 isPrimaryPosition: position._attributes.isPrimaryPosition == 'true',
+                                isManagerPosition: positionCode === undefined ? false : config.manager_codes.includes(positionCode._attributes.positionCode),
                             })
                         }
                         catch (e) {

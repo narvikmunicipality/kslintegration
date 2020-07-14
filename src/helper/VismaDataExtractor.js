@@ -32,7 +32,8 @@ function VismaDataExtractor() {
                     OrganisationId: person.positions[position_i].organisationId + '-' + person.positions[position_i].unitId,
                     SocialSecurityNumber: person.ssn,
                     JobTitle: person.positions[position_i].name,
-                    PrimaryPosition: person.positions[position_i].isPrimaryPosition.toString()
+                    PrimaryPosition: person.positions[position_i].isPrimaryPosition.toString(),
+                    ManagerPosition: person.positions[position_i].isManagerPosition.toString(),
                 }
             }
         }

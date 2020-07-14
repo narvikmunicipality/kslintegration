@@ -15,6 +15,6 @@ describe('VismaDatabaseSpecification', () => {
     })
 
     it('has correct specification for EmployeePosition table', () => {
-        expect(spec.EmployeePosition).toEqual({ tablename: 'EmployeePosition', columns: ['OrganisationId', 'SocialSecurityNumber', 'JobTitle', 'PrimaryPosition'], id_columns: ['OrganisationId', 'SocialSecurityNumber'], value_columns: ['JobTitle', 'PrimaryPosition'] })
-    })    
+        expect(spec.EmployeePosition).toEqual({ tablename: 'EmployeePosition', columns: ['OrganisationId', 'SocialSecurityNumber', 'JobTitle', 'PrimaryPosition', 'ManagerPosition'], id_columns: ['OrganisationId', 'SocialSecurityNumber'], value_columns: ['JobTitle', 'PrimaryPosition', 'ManagerPosition'] })
+    })
 })

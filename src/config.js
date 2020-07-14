@@ -39,4 +39,9 @@ module.exports = {
             basedn: process.env.ACTIVE_DIRECTORY_LOOKUP_BASEDN,
         }
     },
+    kslintegration: {
+        visma_data_extractor: {
+            manager_codes: JSON.parse(process.env.KSLINTEGRATION_VISMA_DATA_EXTRACTOR_MANAGER_CODES)
+        }
+    },
 };

@@ -13,7 +13,7 @@
                         </costCentres>
                         <positionStartDate>2020-02-01</positionStartDate>
                         <positionInfo>
-                            <positionCode name="Konsulent"/>
+                            <positionCode name="Konsulent" positionCode="0000"/>
                         </positionInfo>
                     </position>
                     <position isPrimaryPosition="false" validFromDate="2020-04-03">
@@ -46,7 +46,7 @@
                         </costCentres>>
                         <positionStartDate>2020-01-01</positionStartDate>
                         <positionInfo>
-                            <positionCode name="Leder"/>
+                            <positionCode name="Leder" positionCode="1111"/>
                         </positionInfo>
                     </position>
                     <position isPrimaryPosition="false" validFromDate="2020-04-03">

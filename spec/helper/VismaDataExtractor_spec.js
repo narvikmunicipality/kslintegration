@@ -1,6 +1,6 @@
 describe('VismaDataExtractor', () => {
     const VismaDataExtractor = require('../../src/helper/VismaDataExtractor')
-    const EMPLOYEE_WITH_TWO_POSITIONS = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', name: 'Konsulent' }, { isPrimaryPosition: false, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', name: 'Ingeniør' }] }
+    const EMPLOYEE_WITH_TWO_POSITIONS = { familyName: 'FamilyName', givenName: 'GivenName', ssn: '01020304050', employeeId: '11', positions: [{ isManagerPosition: true, isPrimaryPosition: true, startDate: '2020-02-01', organisationId: '101', unitId: '1001', unitName: 'Enhetsnavn 1', name: 'Konsulent' }, { isManagerPosition: false, isPrimaryPosition: false, startDate: '2020-02-01', organisationId: '102', unitId: '1002', unitName: 'Enhetsnavn 2', name: 'Ingeniør' }] }
     const SSN_TO_MAIL_MAP = [{ssn: '01020304050', mail: 'Mail1'}]
     let extractor
 
@@ -38,11 +38,11 @@ describe('VismaDataExtractor', () => {
 
     describe('extracts and maps values correctly for EmployeePosition table', () => {
         it('for first position', () => {
-            expect(extractor.EmployeePosition.createMap(EMPLOYEE_WITH_TWO_POSITIONS, 0)).toEqual({ OrganisationId: '101-1001', SocialSecurityNumber: '01020304050', JobTitle: 'Konsulent', PrimaryPosition: 'true' })
+            expect(extractor.EmployeePosition.createMap(EMPLOYEE_WITH_TWO_POSITIONS, 0)).toEqual({ OrganisationId: '101-1001', SocialSecurityNumber: '01020304050', JobTitle: 'Konsulent', PrimaryPosition: 'true', ManagerPosition: 'true' })
         })
 
         it('for second position', () => {
-            expect(extractor.EmployeePosition.createMap(EMPLOYEE_WITH_TWO_POSITIONS, 1)).toEqual({ OrganisationId: '102-1002', SocialSecurityNumber: '01020304050', JobTitle: 'Ingeniør', PrimaryPosition: 'false' })
+            expect(extractor.EmployeePosition.createMap(EMPLOYEE_WITH_TWO_POSITIONS, 1)).toEqual({ OrganisationId: '102-1002', SocialSecurityNumber: '01020304050', JobTitle: 'Ingeniør', PrimaryPosition: 'false', ManagerPosition: 'false' })
         })
     })
 })

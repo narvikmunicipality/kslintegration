@@ -75,7 +75,7 @@ async function Container() {
 
     bottle.factory('vismaxmlfilereader', c => c.readfile(c.config.visma.xmlpath))
     bottle.factory('vismaxmlwsreader', c => new VismaXmlWsSource(c.config, c.rawhttpclient).download())
-    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.logger('VismaXmlDataSource'), c.vismaxmlwsreader, c.xml))
+    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.logger('VismaXmlDataSource'), c.vismaxmlwsreader, c.xml, c.config.kslintegration.visma_data_extractor))
     bottle.factory('vismaorganisationworker', c => new VismaDatabaseSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaorganisationdbspec, c.vismaorganisationextractor))
     bottle.factory('vismapersonworker', c => new VismaDatabaseSyncWorker(c.logger('VismaPersonSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismapersondbspec, c.vismapersonextractor))
     bottle.factory('vismaemployeepositionworker', c => new VismaDatabaseSyncWorker(c.logger('VismaEmployeePositionSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaemployeepositiondbspec, c.vismaemployeepositionextractor))
