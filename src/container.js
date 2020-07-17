@@ -49,7 +49,6 @@ async function Container() {
     bottle.constant('express', require('express'))
     bottle.constant('rawhttpclient', axios.create({ 'maxContentLength': Infinity, 'maxBodyLength': Infinity }))
     bottle.constant('xml', xml => require('xml-js').xml2js(xml, { compact: true }))
-    bottle.constant('readfile', require('util').promisify(require('fs').readFile))
     
     bottle.constant('sqlserver', sqlPool)
     bottle.constant('ldap', require('ldapjs-no-python'))
@@ -73,7 +72,6 @@ async function Container() {
     bottle.factory('employeepositiondatabaseservicemap', () => new DatabaseServiceMap().EmployeePosition)
     bottle.factory('persondatabaseservicemap', () => new DatabaseServiceMap().Person)
 
-    bottle.factory('vismaxmlfilereader', c => c.readfile(c.config.visma.xmlpath))
     bottle.factory('vismaxmlwsreader', c => new VismaXmlWsSource(c.config, c.rawhttpclient).download())
     bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.logger('VismaXmlDataSource'), c.vismaxmlwsreader, c.xml, c.config.kslintegration.visma_data_extractor))
     bottle.factory('vismaorganisationworker', c => new VismaDatabaseSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaorganisationdbspec, c.vismaorganisationextractor))
