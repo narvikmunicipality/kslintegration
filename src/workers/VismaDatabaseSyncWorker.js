@@ -109,7 +109,7 @@ function VismaDatabaseSyncWorker(log, sqlserver, vismaDataSource, dbSpec, extrac
             for (let person_i = 0; person_i < persons.length; person_i++) {
                 const person = persons[person_i]
                 for (let position_i = 0; position_i < person.positions.length; position_i++) {
-                    let idValueMap = extractor.createMap(person, position_i)
+                    let idValueMap = await extractor.createMap(person, position_i)
                     activeIds.push(idValueMap)
 
                     const lookupResult = await lookupExistingItemWithId(sqlserver, idValueMap)

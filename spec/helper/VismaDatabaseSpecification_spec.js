@@ -7,7 +7,7 @@ describe('VismaDatabaseSpecification', () => {
     })
 
     it('has correct specification for Organisation table', () => {
-        expect(spec.Organisation).toEqual({ tablename: 'Organisation', columns: ['OrganisationId', 'Name'], id_columns: ['OrganisationId'], value_columns: ['Name'] })
+        expect(spec.Organisation).toEqual({ tablename: 'Organisation', columns: ['OrganisationId', 'Name', 'ParentId'], id_columns: ['OrganisationId'], value_columns: ['Name', 'ParentId'] })
     })
 
     it('has correct specification for Person table', () => {

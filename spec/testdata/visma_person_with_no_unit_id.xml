@@ -7,15 +7,17 @@
                 <employeeId>11</employeeId>
                 <positions>
                     <position isPrimaryPosition="true" validFromDate="2020-04-03">
-                        <chart id="101"/>
+                        <chart id="101">
+                            <unit/>
+                        </chart>
                         <costCentres>
                             <dimension2 value="000000001001"/>
                         </costCentres>
                         <positionStartDate>2020-02-01</positionStartDate>
                         <positionInfo>
-                            <positionType name="Stillingstype" value="F"/>
+                            <positionCode name="Konsulent" positionCode="0000"/>
                         </positionInfo>
-                    </position>
+                    </position>                    
                 </positions>
             </employment>
         </employments>

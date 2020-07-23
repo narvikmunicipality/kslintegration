@@ -30,6 +30,7 @@ async function Container() {
     let OrganisationController = require('./controllers/GenericDataRangeController')
     let PersonController = require('./controllers/GenericDataRangeController')
     let VenueController = require('./controllers/VenueController')  
+    let VismaXmlOrganisationXmlConverter = require('./helper/VismaOrganisationXmlConverter')
     let VismaXmlDataSource = require('./helper/VismaXmlDataSource')
     let VismaXmlWsSource = require('./helper/VismaWsXmlRetriever')
     let VismaDatabaseSpecification = require('./helper/VismaDatabaseSpecification')
@@ -56,24 +57,27 @@ async function Container() {
 
     // Miscellaneous
     const ssn2mailList = await (new ActiveDirectoryService(bottle.container.ldap, bottle.container.config.ldap.config)).search('(&(ssn=*)(mail=*))', ['ssn', 'mail'])
+
+    bottle.factory('orgXmlConvert', c => xml => VismaXmlOrganisationXmlConverter(c.xml, xml))
     bottle.factory('indexRoutes', c => indexRoutes(c))
     bottle.factory('ssn2mail', () => ssn2mailList)
-
+    
     // Workers
-    bottle.factory('vismaorganisationextractor', () => new VismaDataExtractor().Organisation)
+    bottle.factory('vismaorganisationextractor', c => new VismaDataExtractor().Organisation(c.orgXmlConvert(c.vismaorganisatonxmlwsreader)))
     bottle.factory('vismapersonextractor', c => new VismaDataExtractor().Person(c.ssn2mail))
-    bottle.factory('vismaemployeepositionextractor', () => new VismaDataExtractor().EmployeePosition)
-
+    bottle.factory('vismaemployeepositionextractor', c => new VismaDataExtractor().EmployeePosition(c.orgXmlConvert(c.vismaorganisatonxmlwsreader)))
+    
     bottle.factory('vismaorganisationdbspec', () => new VismaDatabaseSpecification().Organisation)
     bottle.factory('vismapersondbspec', () => new VismaDatabaseSpecification().Person)
     bottle.factory('vismaemployeepositiondbspec', () => new VismaDatabaseSpecification().EmployeePosition)
-
+    
     bottle.factory('organisationdatabaseservicemap', () => new DatabaseServiceMap().Organisation)
     bottle.factory('employeepositiondatabaseservicemap', () => new DatabaseServiceMap().EmployeePosition)
     bottle.factory('persondatabaseservicemap', () => new DatabaseServiceMap().Person)
-
-    bottle.factory('vismaxmlwsreader', c => new VismaXmlWsSource(c.config, c.rawhttpclient).download())
-    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.logger('VismaXmlDataSource'), c.vismaxmlwsreader, c.xml, c.config.kslintegration.visma_data_extractor))
+    
+    bottle.factory('vismapersonxmlwsreader', c => new VismaXmlWsSource(c.rawhttpclient, c.config.visma_person_ws_url, c.config.visma_ws).download())
+    bottle.factory('vismaorganisatonxmlwsreader', c => new VismaXmlWsSource(c.rawhttpclient, c.config.visma_organisation_ws_url, c.config.visma_ws).download())
+    bottle.factory('vismaxmldatasource', c => new VismaXmlDataSource(c.logger('VismaXmlDataSource'), c.vismapersonxmlwsreader, c.xml))
     bottle.factory('vismaorganisationworker', c => new VismaDatabaseSyncWorker(c.logger('VismaOrganisationSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaorganisationdbspec, c.vismaorganisationextractor))
     bottle.factory('vismapersonworker', c => new VismaDatabaseSyncWorker(c.logger('VismaPersonSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismapersondbspec, c.vismapersonextractor))
     bottle.factory('vismaemployeepositionworker', c => new VismaDatabaseSyncWorker(c.logger('VismaEmployeePositionSyncWorker'), c.sqlserver, c.vismaxmldatasource, c.vismaemployeepositiondbspec, c.vismaemployeepositionextractor))

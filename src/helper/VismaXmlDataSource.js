@@ -1,4 +1,4 @@
-function VismaXmlDataSource(log, vismaXml, parseXml, config) {
+function VismaXmlDataSource(log, vismaXml, parseXml) {
     function isExpired(position) {
         return position.positionEndDate && new Date(position.positionEndDate._text) <= new Date()
     }
@@ -11,8 +11,13 @@ function VismaXmlDataSource(log, vismaXml, parseXml, config) {
         return position.costCentres === undefined || position.costCentres.dimension2 === undefined
     }
 
-    function capitalize(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+    function isMissingUnit(position) {
+        return position.chart.unit === undefined
+    }
+
+    function getUnitIdFromChartsUnitOrCostcentreDimension(position) {
+        const chartUnitIdExists = position.chart.unit && position.chart.unit._attributes;
+        return chartUnitIdExists ? position.chart.unit._attributes.id : position.costCentres.dimension2._attributes.value.replace(/^0*/g, '');
     }
 
     return {
@@ -30,13 +35,13 @@ function VismaXmlDataSource(log, vismaXml, parseXml, config) {
                 for (let position_i = 0; position_i < xmlPosition.length; position_i++) {
                     const position = xmlPosition[position_i];
 
-                    if (isExpired(position) || isMissingChart(position) || isMissingDimension2(position)) {
+                    if (isExpired(position) || isMissingChart(position) || isMissingUnit(position) && isMissingDimension2(position)) {
                         continue
                     }
 
                     const positionCode = position.positionInfo.positionCode
                     const positionType = position.positionInfo.positionType
-                    const unitId = position.costCentres.dimension2._attributes.value.replace(/^0*/g, '');
+                    const unitId = getUnitIdFromChartsUnitOrCostcentreDimension(position)
                     const organisationId = position.chart._attributes.id;
 
                     let matchingUnit = positions.filter(x => x.unitId === unitId && x.organisationId === organisationId)
@@ -49,11 +54,9 @@ function VismaXmlDataSource(log, vismaXml, parseXml, config) {
                             positions.push({
                                 organisationId: organisationId,
                                 unitId: unitId,
-                                unitName: capitalize(position.costCentres.dimension2._attributes.name.toLowerCase()),
                                 name: positionCode === undefined ? positionType._attributes.name : positionCode._attributes.name,
                                 startDate: new Date(position.positionStartDate && position.positionStartDate._text || position._attributes.validFromDate),
                                 isPrimaryPosition: position._attributes.isPrimaryPosition == 'true',
-                                isManagerPosition: positionCode === undefined ? false : config.manager_codes.includes(positionCode._attributes.positionCode),
                             })
                         }
                         catch (e) {

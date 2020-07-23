@@ -9,7 +9,7 @@
                     <position isPrimaryPosition="true" validFromDate="2020-04-03">
                         <chart id="101"/>
                         <costCentres>
-                            <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
+                            <dimension2 value="000000001001"/>
                         </costCentres>
                         <positionInfo>
                             <positionCode name="Konsulent"/>

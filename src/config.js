@@ -24,9 +24,9 @@ module.exports = {
             }
         }
     },
-    visma: {
-        xmlpath: process.env.VISMA_XML_FILE_PATH,
-        ws_url: process.env.VISMA_WS_URL_XML,
+    visma_person_ws_url: process.env.VISMA_PERSON_WS_URL_XML,
+    visma_organisation_ws_url: process.env.VISMA_ORGANISATION_WS_URL_XML,
+    visma_ws: {
         ws_user: process.env.VISMA_WS_USER,
         ws_password: process.env.VISMA_WS_PASSWORD,
     },
@@ -37,11 +37,6 @@ module.exports = {
             timeout: process.env.ACTIVE_DIRECTORY_LOOKUP_CONNECT_TIMEOUT,
             serverUrl: process.env.ACTIVE_DIRECTORY_LOOKUP_SERVER_URL,
             basedn: process.env.ACTIVE_DIRECTORY_LOOKUP_BASEDN,
-        }
-    },
-    kslintegration: {
-        visma_data_extractor: {
-            manager_codes: JSON.parse(process.env.KSLINTEGRATION_VISMA_DATA_EXTRACTOR_MANAGER_CODES)
         }
     },
 };

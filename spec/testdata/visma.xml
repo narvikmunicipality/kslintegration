@@ -7,9 +7,11 @@
                 <employeeId>11</employeeId>
                 <positions>
                     <position isPrimaryPosition="true" validFromDate="2020-04-03">
-                        <chart id="101"/>
+                        <chart id="101">
+                            <unit id="1001"/>
+                        </chart>
                         <costCentres>
-                            <dimension2 name="ENHETSNAVN 1" value="000000001001"/>
+                            <dimension2 value="000000001001"/>
                         </costCentres>
                         <positionStartDate>2020-02-01</positionStartDate>
                         <positionInfo>
@@ -17,9 +19,11 @@
                         </positionInfo>
                     </position>
                     <position isPrimaryPosition="false" validFromDate="2020-04-03">
-                        <chart id="101"/>
+                        <chart id="101">
+                            <unit id="1002"/>
+                        </chart>
                         <costCentres>
-                            <dimension2 name="ENHETSNAVN 2" value="000000001002"/>
+                            <dimension2 value="000000001002"/>
                         </costCentres>
                         <positionStartDate>2020-03-01</positionStartDate>
                         <positionEndDate>2020-05-01</positionEndDate>
@@ -40,9 +44,11 @@
                 <employeeId>12</employeeId>
                 <positions>
                     <position isPrimaryPosition="true" validFromDate="2020-04-03">
-                        <chart id="101"/>
+                        <chart id="101">
+                            <unit id="1003"/>
+                        </chart>
                         <costCentres>
-                            <dimension2 name="ENHETSNAVN 3" value="000000001003"/>
+                            <dimension2 value="000000001005"/>
                         </costCentres>>
                         <positionStartDate>2020-01-01</positionStartDate>
                         <positionInfo>
@@ -50,9 +56,11 @@
                         </positionInfo>
                     </position>
                     <position isPrimaryPosition="false" validFromDate="2020-04-03">
-                        <chart id="101"/>
+                        <chart id="101">
+                            <unit id="1004"/>
+                        </chart>
                         <costCentres>
-                            <dimension2 name="ENHETSNAVN 4" value="000000001004"/>
+                            <dimension2 value="000000001004"/>
                         </costCentres>
                         <positionStartDate>2020-04-01</positionStartDate>
                         <positionEndDate>2020-04-02</positionEndDate>

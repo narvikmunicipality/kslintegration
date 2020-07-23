@@ -1,7 +1,13 @@
-function VismaWsXmlRetriever(config, http) {
+function VismaWsXmlRetriever(http, url, authentication) {
+    function replaceDateTokenWithCorrectDate(urlWithToken) {
+        return urlWithToken.replace('$DATE_NOW$', new Date().toISOString().slice(0, 10))
+    }
+
     return {
         download: async () => {
-            let result = await http.get(config.visma.ws_url, { auth: { username: config.visma.ws_user, password: config.visma.ws_password } })
+            url = replaceDateTokenWithCorrectDate(url)
+
+            let result = await http.get(url, { auth: { username: authentication.ws_user, password: authentication.ws_password } })
             return result.data
         }
     }

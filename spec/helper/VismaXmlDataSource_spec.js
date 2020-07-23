@@ -7,7 +7,7 @@ describe('VismaXmlDataSource', () => {
 
     beforeEach(() => {
         logMock = jasmine.createSpyObj('log', ['error'])
-        configStub = { manager_codes: ['1111'] } 
+        configStub = { manager_codes: ['1111'] }
         jasmine.clock().install()
         jasmine.clock().mockDate(new Date('2020-04-30'))
     })
@@ -119,16 +119,6 @@ describe('VismaXmlDataSource', () => {
             })
         }
 
-        for (const { testName, personsIndex, positionIndex, isManagerPosition} of [
-            { testName: 'First persons first position is not manager', personsIndex: 0, positionIndex: 0, isManagerPosition: false },
-            { testName: 'First persons second position is not manager', personsIndex: 0, positionIndex: 1, isManagerPosition: false },
-            { testName: 'Second persons position is manager', personsIndex: 1, positionIndex: 0, isManagerPosition: true }
-        ]) {
-            it(testName, async () => {
-                expect((await source.getPersons())[personsIndex].positions[positionIndex].isManagerPosition).toBe(isManagerPosition)
-            })
-        }
-
         for (const { testName, personsIndex, positionIndex, startDate: startDate } of [
             { testName: 'First persons first position has correct startDate', personsIndex: 0, positionIndex: 0, startDate: new Date('2020-02-01') },
             { testName: 'First persons second position has correct startDate', personsIndex: 0, positionIndex: 1, startDate: new Date('2020-03-01') },
@@ -136,17 +126,6 @@ describe('VismaXmlDataSource', () => {
         ]) {
             it(testName, async () => {
                 expect((await source.getPersons())[personsIndex].positions[positionIndex].startDate).toEqual(startDate)
-            })
-        }
-
-
-        for (const { testName, personsIndex, positionIndex, unitName: unitName } of [
-            { testName: 'First persons first position has correct unitName', personsIndex: 0, positionIndex: 0, unitName: 'Enhetsnavn 1' },
-            { testName: 'First persons second position has correct unitName', personsIndex: 0, positionIndex: 1, unitName: 'Enhetsnavn 2' },
-            { testName: 'Second persons position has correct unitName', personsIndex: 1, positionIndex: 0, unitName: 'Enhetsnavn 3' }
-        ]) {
-            it(testName, async () => {
-                expect((await source.getPersons())[personsIndex].positions[positionIndex].unitName).toEqual(unitName)
             })
         }
     })
@@ -242,4 +221,24 @@ describe('VismaXmlDataSource', () => {
             expect((await source.getPersons())[0].positions[0].startDate).toEqual(new Date('2020-04-03'))
         })
     })
+
+    describe('person with no unit id', () => {
+        beforeEach(async () => {
+            source = createDataSourceForXml('spec/testdata/visma_person_with_no_unit_id.xml')
+        })
+
+        it('Fall backs to using cost centres unit id', async () => {
+            expect((await source.getPersons())[0].positions[0].unitId).toEqual('1001')
+        })
+    })
+
+    describe('person with unit id and no dimension2', () => {
+        beforeEach(async () => {
+            source = createDataSourceForXml('spec/testdata/visma_person_with_unitid_and_no_dimension2.xml')
+        })
+
+        it('returns chart→unit unit id', async () => {
+            expect((await source.getPersons())[0].positions[0].unitId).toEqual('1001')
+        })
+    })    
 })

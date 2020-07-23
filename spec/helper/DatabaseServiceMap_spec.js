@@ -7,7 +7,7 @@ describe('DatabaseServiceMap', () => {
     })
 
     it('has correct mapping for Organisation columns', () => {
-        expect(spec.Organisation).toEqual({ OrganisationId: 'id', Name: 'name' })
+        expect(spec.Organisation).toEqual({ OrganisationId: 'id', Name: 'name', ParentId: 'parent' })
     })
 
     it('has correct mapping for Person columns', () => {
