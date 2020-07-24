@@ -6,7 +6,7 @@ async function VismaOrganisationXmlConverter(parseXml, organisationXml) {
         for (let unit_i = 0; unit_i < unitList.length; unit_i++) {
             const unit = unitList[unit_i];
             const managerId = unit.manager && unit.manager._attributes.id || ''
-            units.push({ unitId: unit._attributes.id, name: unit._attributes.name, parentId: unit._attributes.parentid, managerId: managerId, parentCode: unit._attributes.kode });
+            units.push({ chartId: xml.charts.chart._attributes.id, unitId: unit._attributes.id, name: unit._attributes.name, parentId: unit._attributes.parentid, managerId: managerId, parentCode: unit._attributes.kode });
         }
 
         return units
