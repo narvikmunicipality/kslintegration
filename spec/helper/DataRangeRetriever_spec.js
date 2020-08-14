@@ -6,12 +6,16 @@ describe('DataRangeRetriever', () => {
     const MULTIPLE_MAPPING = { TestId1: 'primary_id', TestId2: 'secondary_id', Value1: 'vendor', Value2: 'model' }
     const SINGLE_SPEC = { tablename: 'TestSingle', columns: ['TestId', 'Value'], id_columns: ['TestId'], value_columns: ['Value'] }
     const MULTIPLE_SPEC = { tablename: 'TestMultiple', columns: ['TestId1', 'TestId2', 'Value1', 'Value2'], id_columns: ['TestId1', 'TestId2'], value_columns: ['Value1', 'Value2'] }
+    const SINGLE_MAPPING_WITH_BOOLEAN_TYPE = { TestId: 'main_id', "Value:bool": 'switch' }
+    const MULTIPLE_MAPPING_WITH_BOOLEAN_TYPE = { TestId1: 'primary_id', TestId2: 'secondary_id', "Value1:bool": 'switch1', "Value2:bool": 'switch2' }
 
     const EMPTY_SQL_RESULT = { recordset: [], output: {}, rowsAffected: [0] }
     const SINGLE_SPEC_SINGLE_ITEM_NO_DATES_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'Test' }], output: {}, rowsAffected: [1] }
     const MULTIPLE_SPEC_SINGLE_ITEM_NO_DATES_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2' }], output: {}, rowsAffected: [1] }
     const SINGLE_SPEC_MULTIPLE_ITEM_NO_DATES_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'Test1' }, { TestId: '2', Value: 'Test2' }], output: {}, rowsAffected: [2] }
     const MULTIPLE_SPEC_MULTIPLE_ITEM_NO_DATES_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'Test1', Value2: 'Test2' }, { TestId1: '3', TestId2: '4', Value1: 'Test3', Value2: 'Test4' }], output: {}, rowsAffected: [2] }
+    const SINGLE_SPEC_SINGLE_ITEM_NO_DATES_BOOLEAN_SQL_RESULT = { recordset: [{ TestId: '1', Value: 'false' }], output: {}, rowsAffected: [1] }
+    const MULTIPLE_SPEC_SINGLE_ITEM_NO_DATES_BOOLEAN_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2', Value1: 'true', Value2: 'false' }], output: {}, rowsAffected: [1] }
 
     const SINGLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT = { recordset: [{ TestId: '1' }], output: {}, rowsAffected: [1] }
     const MULTIPLE_SPEC_SINGLE_ID_ITEM_DATE_SQL_RESULT = { recordset: [{ TestId1: '1', TestId2: '2' }], output: {}, rowsAffected: [1] }
@@ -73,6 +77,20 @@ describe('DataRangeRetriever', () => {
             { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING, queryResult: MULTIPLE_SPEC_MULTIPLE_ITEM_NO_DATES_SQL_RESULT, expectedResult: JSON.stringify({ changeType: 'add', changeDate: '2020-05-14T08:29:42Z', newRecord: { primary_id: '1', secondary_id: '2', vendor: 'Test1', model: 'Test2' } }) + '\n' + JSON.stringify({ changeType: 'add', changeDate: '2020-05-14T08:29:42Z', newRecord: { primary_id: '3', secondary_id: '4', vendor: 'Test3', model: 'Test4' } }) },
         ]) {
             it(`returns multiple items from database on separate lines with ${testname}`, async () => {
+                queryReturns.push(queryResult)
+                retriever = createRetriever(spec, map)
+
+                let result = await retriever.get(undefined, undefined)
+
+                expect(result).toEqual(expectedResult)
+            })
+        }
+
+        for (const { testname, spec, map, queryResult, expectedResult } of [
+            { testname: 'single spec', spec: SINGLE_SPEC, map: SINGLE_MAPPING_WITH_BOOLEAN_TYPE, queryResult: SINGLE_SPEC_SINGLE_ITEM_NO_DATES_BOOLEAN_SQL_RESULT, expectedResult: JSON.stringify({ changeType: 'add', changeDate: '2020-05-14T08:29:42Z', newRecord: { main_id: '1', switch: false } }) },
+            { testname: 'multiple spec', spec: MULTIPLE_SPEC, map: MULTIPLE_MAPPING_WITH_BOOLEAN_TYPE, queryResult: MULTIPLE_SPEC_SINGLE_ITEM_NO_DATES_BOOLEAN_SQL_RESULT, expectedResult: JSON.stringify({ changeType: 'add', changeDate: '2020-05-14T08:29:42Z', newRecord: { primary_id: '1', secondary_id: '2', switch1: true, switch2: false } }) },
+        ]) {
+            it(`converts boolean string to boolean type when specified in mapping with ${testname}`, async () => {
                 queryReturns.push(queryResult)
                 retriever = createRetriever(spec, map)
 

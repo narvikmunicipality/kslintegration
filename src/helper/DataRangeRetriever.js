@@ -4,8 +4,14 @@ function DataRangeRetriever(spec, map, sqlserver) {
     }
 
     function mapRecordToItem(item, record) {
+        function isBooleanValue(key) { return map[`${key}:bool`] }
+
         for (const key of spec.columns) {
-            item[map[key]] = record[key]
+            if (isBooleanValue(key)) {
+                item[map[`${key}:bool`]] = record[key] === 'true'
+            } else {
+                item[map[key]] = record[key]
+            }
         }
     }
 
@@ -13,6 +19,7 @@ function DataRangeRetriever(spec, map, sqlserver) {
         get: async (fromDate, toDate) => {
             let items = []
 
+            // If no fromDate → toDate was given, everything is returned.
             if (!(fromDate && toDate)) {
                 let result = await sqlserver.request().query(`SELECT ${spec.columns.join(',')} FROM ${spec.tablename} WHERE FromDate < GETDATE() AND ToDate IS NULL`)
 
