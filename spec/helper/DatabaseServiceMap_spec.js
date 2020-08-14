@@ -15,6 +15,6 @@ describe('DatabaseServiceMap', () => {
     })
 
     it('has correct mapping for EmployeePosition columns', () => {
-        expect(spec.EmployeePosition).toEqual({ OrganisationId: 'org_id', SocialSecurityNumber: 'national_id', JobTitle: 'position_name', PrimaryPosition: 'main', ManagerPosition: 'manager' })
+        expect(spec.EmployeePosition).toEqual({ OrganisationId: 'org_id', SocialSecurityNumber: 'national_id', JobTitle: 'position_name', "PrimaryPosition:bool": 'main', "ManagerPosition:bool": 'manager' })
     })
 })
