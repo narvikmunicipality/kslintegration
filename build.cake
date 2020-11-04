@@ -1,5 +1,6 @@
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.4.0
 #addin nuget:?package=Cake.Npm&version=0.17.0
+#addin nuget:?package=Cake.FileHelpers&version=3.3.0
 using System.Text.RegularExpressions;
 
 var sourceFiles = "./src/**/*";
@@ -42,6 +43,11 @@ Task("Verify .env")
     {
         throw new Exception("\n.env does not exist in \"src\" folder!\nIt's required for the packaged KslIntegration to get configured properly.\nUse .env.example as a base configuration or reuse an existing configuration.");
     }
+    else if (FindRegexMatchInFile(envFile, "KSLINTEGRATION_DATABASE_DATABASE=.*_dev", RegexOptions.IgnoreCase) != null)
+    {
+        throw new Exception("\n.env is referencing a development database.");
+    }
+
 });
 
 Task("Package")
